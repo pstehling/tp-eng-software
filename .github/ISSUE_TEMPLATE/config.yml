@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Dúvidas sobre o regulamento
+    url: https://github.com/johnatan-si/tp-eng-software
+    about: Consulte o repositório-modelo da disciplina antes de abrir uma issue.

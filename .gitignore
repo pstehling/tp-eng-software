@@ -1,0 +1,25 @@
+# Dependências
+node_modules/
+__pycache__/
+*.pyc
+
+# Variáveis de ambiente e segredos
+.env
+.env.local
+*.pem
+*.key
+
+# Build e cache
+dist/
+build/
+.cache/
+
+# Sistema operacional / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
