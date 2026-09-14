@@ -1,10 +1,14 @@
 # Product Backlog
 
 > O backlog operacional deve ser mantido no **GitHub Project**, por meio de Issues. Este documento explica a convenção adotada e apresenta uma visão rastreável dos itens.
+>
+> **Última atualização:** Sprint 2 — 14/09/2026.
 
 ## 1. Link do GitHub Project
 
-`[COLAR LINK DO PROJECT]`
+[`https://github.com/users/pstehling/projects/2`](https://github.com/users/pstehling/projects/2)
+
+As 10 issues iniciais foram criadas no repositório [`github.com/pstehling/tp-eng-software`](https://github.com/pstehling/tp-eng-software) (Issue 01 a Issue 10 = `#1` a `#10`). **Pendência restante:** confirmar que todas as 10 issues foram efetivamente adicionadas ao quadro do Project acima (criar a issue no repositório não a adiciona automaticamente ao Project).
 
 ## 2. Campos obrigatórios no Project
 
@@ -19,40 +23,61 @@ Cada item deve possuir, no mínimo:
 - critério de aceitação ou conclusão;
 - requisito relacionado, quando aplicável.
 
+Os estados utilizados no quadro são: **A fazer**, **Em andamento**, **Em revisão** e **Concluído** (conforme exigido no regulamento do trabalho, seção 6.2).
+
 ## 3. Estratégia de priorização
 
-`[Explique os critérios utilizados: valor, risco, dependências, urgência, complexidade etc.]`
+A priorização adotada pelo grupo combina três critérios, nesta ordem:
+
+1. **Valor para o usuário**  funcionalidades que resolvem diretamente a dor central do problema (dispersão de material e falta de banco de questões organizado) recebem prioridade **Alta**: cadastro/login (RF-01 a RF-03), listagem e banco de questões (RF-06 a RF-09) e organização de materiais (RF-11).
+2. **Dependência técnica**  itens que bloqueiam outros entram antes na sequência: autenticação (RF-02/RF-03) precisa existir antes de perfil (RF-05) e antes de qualquer tela que exija usuário logado (RF-04, RF-06 em diante); o povoamento do banco de questões (RF-08) precisa vir antes da resolução de questões (RF-09) ter conteúdo para exibir.
+3. **Risco e complexidade**  funcionalidades que dependem de serviços externos ou de maior incerteza técnica (chat com IA RF-10) recebem prioridade **Média** e ficam posicionadas depois do núcleo de estudo (questões e materiais), para não travar o cronograma caso a integração externa apresente problemas.
+
+Essa ordem é a mesma refletida na coluna "Prioridade" de `docs/requisitos/requisitos.md` e na divisão por sprint das issues do grupo (Sprint 1: autenticação; Sprint 2: núcleo de navegação e banco de questões; Sprint 3: questão, IA e materiais).
 
 ## 4. Visão resumida do backlog
 
-| ID | Link da Issue | Tipo | Descrição curta | Prioridade | Requisito | Sprint | Estado final |
-|---|---|---|---|---|---|---|---|
-| `US-01` | `#XX` | História | `[PREENCHER]` | Alta | `RF-01` | 2 | Planejado |
-| `T-01` | `#XX` | Tarefa | `[PREENCHER]` | Alta | `RF-01` | 2 | Planejado |
+| ID | Link da Issue | Tipo | Descrição curta | Prioridade | Requisito | Sprint | Responsáveis previstos | Estado final |
+|---|---|---|---|---|---|---|---|---|
+| `T-01` | — | Tarefa técnica | Estruturar esqueleto executável da aplicação (Node.js/Express, endpoint `/api/status`, páginas estáticas iniciais) | Alta | — | 1 | Grupo | **Concluído** (verificado localmente em 14/09/2026 — ver seção 4 de `docs/sprints/sprint-01.md`) |
+| `US-01` | [`#1`](https://github.com/pstehling/tp-eng-software/issues/1) | História | Tela de Login | Alta | RF-02, RNF-02 | 1 | @gabrielrooocha, @joaovitormv | Planejado |
+| `US-02` | [`#2`](https://github.com/pstehling/tp-eng-software/issues/2) | História | Tela de Autenticação (cadastro e verificação de conta) | Alta | RF-01, RF-03, RNF-02 | 1 | @joaovitormv, @IsadoraRB-dge | Planejado |
+| `US-03` | [`#3`](https://github.com/pstehling/tp-eng-software/issues/3) | História | Tela Inicial do Usuário | Alta | RF-04, RNF-01, RNF-03 | 2 | @gabrielrooocha, @pstehling | Planejado |
+| `US-04` | [`#4`](https://github.com/pstehling/tp-eng-software/issues/4) | História | Tela de Perfil | Média | RF-05, RNF-02 | 2 | @IsadoraRB-dge, @gabrielrooocha | Planejado |
+| `US-05` | [`#5`](https://github.com/pstehling/tp-eng-software/issues/5) | História | Tela de Matéria | Alta | RF-06, RNF-03 | 2 | @gabrielcarvalho28, @pstehling | Planejado |
+| `US-06` | [`#6`](https://github.com/pstehling/tp-eng-software/issues/6) | História | Tela de Banco de Questões | Alta | RF-07, RNF-03 | 2 | @IsadoraRB-dge, @gabrielrooocha | Planejado |
+| `US-07` | [`#7`](https://github.com/pstehling/tp-eng-software/issues/7) | História | Povoar Banco de Questões | Alta | RF-08, RNF-02 | 2 | @pstehling, @gabrielcarvalho28 | Planejado |
+| `US-08` | [`#8`](https://github.com/pstehling/tp-eng-software/issues/8) | História | Tela de Questão (correção e explicação) | Alta | RF-09, RF-10, RNF-01 | 3 | @joaovitormv, @gabrielrooocha | Planejado |
+| `US-09` | [`#9`](https://github.com/pstehling/tp-eng-software/issues/9) | História | Tela de Conversa com a IA | Média | RF-10, RNF-03 | 3 | @IsadoraRB-dge, @joaovitormv | Planejado |
+| `US-10` | [`#10`](https://github.com/pstehling/tp-eng-software/issues/10) | História | Organização de Materiais Próprios | Alta | RF-11, RNF-01, RNF-04 | 3 | @pstehling, @gabrielcarvalho28 | Planejado |
+
+
+Isso totaliza **11 itens** (1 tarefa técnica + 10 histórias), atendendo ao mínimo de dez itens descritos e priorizados exigido na Sprint 1.
 
 ## 5. Definition of Ready
 
 Um item está pronto para entrar em uma sprint quando:
 
-- [ ] possui descrição compreensível;
-- [ ] tem valor ou objetivo identificável;
-- [ ] possui critério de aceitação/conclusão;
-- [ ] dependências principais foram registradas;
-- [ ] foi estimado de acordo com a convenção do grupo.
+- [x] possui descrição compreensível;
+- [x] tem valor ou objetivo identificável;
+- [x] possui critério de aceitação/conclusão;
+- [x] dependências principais foram registradas;
+- [x] foi estimado de acordo com a convenção do grupo.
 
 ## 6. Definition of Done
 
 Um item está concluído quando:
 
 - [ ] atende aos critérios de aceitação;
-- [ ] foi revisado por outro integrante;
+- [ ] foi revisado por outro integrante (Pull Request);
 - [ ] está integrado à branch `main`;
 - [ ] possui testes/evidências quando aplicável;
 - [ ] atualizou a documentação afetada;
-- [ ] está relacionado ao arquivo da sprint.
+- [ ] está relacionado ao arquivo da sprint correspondente.
 
 ## 7. Histórico de refinamento
 
 | Sprint | Itens criados/divididos/removidos | Motivo | Evidência |
 |---|---|---|---|
-| Sprint 1 | `[PREENCHER]` | `[PREENCHER]` | `#XX` |
+| Sprint 1 | Backlog inicial estruturado com 1 tarefa técnica (T-01) e as 10 histórias de usuário (US-01 a US-10), mapeadas a partir dos requisitos funcionais levantados. | Consolidar o levantamento de requisitos do grupo em itens rastreáveis e priorizados, conforme exigido pelo regulamento (mínimo de dez itens). | |
+| Sprint 2 | Nenhum item novo criado; backlog revisado para confirmar consistência entre requisitos (RF/RNF) e histórias já previstas. As 10 issues iniciais (US-01 a US-10) foram criadas no GitHub como `#1` a `#10`. | Os requisitos funcionais e não funcionais foram detalhados e formalizados em `docs/requisitos/requisitos.md` nesta sprint, sem alterar o escopo das histórias já previstas na Sprint 1; as issues foram migradas do material de apoio para o GitHub para tornar o backlog rastreável. | `docs/requisitos/requisitos.md`, [issues #1–#10](https://github.com/pstehling/tp-eng-software/issues) |
