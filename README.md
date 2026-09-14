@@ -6,11 +6,11 @@
 
 | Campo | Informação |
 |---|---|
-| Nome do projeto | `[PREENCHER]` |
-| Problema escolhido | `[PREENCHER]` |
+| Nome do projeto | `While(Estuda)` |
+| Problema escolhido | `Falta de matérias e centralização para o estudo na área da computação` |
 | Turma/semestre | Engenharia de Software — 2026/2 |
 | Professor | Prof. Johnatan Oliveira |
-| Link do GitHub Project | `[COLAR LINK]` |
+| Link do GitHub Project | `https://github.com/pstehling/tp-eng-software.git` |
 | Link da aplicação publicada | `[COLAR LINK ]` |
 | Link do vídeo final | `[PREENCHER NA ENTREGA FINAL]` |
 
@@ -18,24 +18,26 @@
 
 | Nome completo | Usuário no GitHub | Responsabilidade principal | Outras contribuições |
 |---|---|---|---|
-| `[Nome 1]` | `@usuario` | `[PREENCHER]` | `[PREENCHER]` |
-| `[Nome 2]` | `@usuario` | `[PREENCHER]` | `[PREENCHER]` |
-| `[Nome 3]` | `@usuario` | `[PREENCHER]` | `[PREENCHER]` |
+| `Pedro Stehling Mendes` | `@pstehling` | `Scrum Master` | `Dev, BD` |
+| `Gabriel Soares Carvalho` | `@gabrielcarvalho28` | `Requisitos` | `Dev` |
+| `Isadora Rocha Brito` | `@IsadoraRB-dge` | `Dev` | `Backend Dev` |
+| `Joao Vitor Maximiliom Vieira` | `@joaovitormv` | `Dev` | `Backend Dev, QA` |
+| `Gabriel Rocha de Almeida` | `@gabrielrooocha` | `UI/UX Designer` | `FrontEnd Dev, QA` |
 
 > O grupo deve ter de 3 a 5 integrantes. A atribuição de uma responsabilidade principal não dispensa a participação colaborativa nas demais atividades.
 
 ## 2. Resumo da solução
 
-**Problema:** `[Explique em 3 a 5 linhas o problema real que será tratado.]`
+**Problema:** `Quem estuda para provas, vestibulares ou concursos sabe como é difícil encontrar questões bem organizadas por matéria. Ficar caçando exercícios torna qualquer revisão cansativa e ineficiente. Para piorar, resumos, anotações e listas de exercícios costumam ficar espalhados entre vários cadernos, arquivos no computador e diferentes aplicativos. Essa bagunça atrapalha o planejamento, derruba a produtividade e faz com que percamos um tempo precioso só procurando onde está cada coisa`
 
-**Solução proposta:** `[Explique em 3 a 5 linhas qual aplicação web será desenvolvida.]`
+**Solução proposta:** `É exatamente por isso que faz tanta falta uma plataforma que resolva esse problema. Voltada para a área da computação, a proposta é oferecer um ambiente único que concentre questões separadas por área de estudo. Além disso, a plataforma deve disponibilizar ferramentas para organizar todo o material de estudo, resumos, anotações e listas de forma prática e centralizada. Assim, o estudante ganha tempo e consegue planejar sua revisão com muito mais eficiência.`
 
-**Público principal:** `[Quem utilizará ou será beneficiado pelo sistema?]`
+**Público principal:** `Estudantes das disciplinas de computação da UFLA`
 
 **Funcionalidades prioritárias:**
-- `[Funcionalidade 1]`
-- `[Funcionalidade 2]`
-- `[Funcionalidade 3]`
+- `Resolução de questões`
+- `Organização de pastas e arquivos de diretórios para centralização de arquivos e materiais`
+- `Chat com IA que auxilia nas dúvidas e em temas específicos`
 
 ## 3. Comece por aqui
 
