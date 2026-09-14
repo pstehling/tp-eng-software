@@ -6,7 +6,7 @@
 
 | Campo | Informação |
 |---|---|
-| Nome do projeto | `EstUFLA` |
+| Nome do projeto | `While(Estuda)` |
 | Problema escolhido | `Falta de matérias e centralização para o estudo na área da computação` |
 | Turma/semestre | Engenharia de Software — 2026/2 |
 | Professor | Prof. Johnatan Oliveira |
