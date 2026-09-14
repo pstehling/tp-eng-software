@@ -3,7 +3,7 @@
 - **Data de entrega:** 24/08/2026
 - **Pontuação:** 2,5 pontos
 - **Tag obrigatória:** `sprint-01`
-- **Responsável por conferir este arquivo:** `@pstehling (Scrum Master)`
+- **Responsável por conferir este arquivo:** `@pstehling`
 
 ## 1. Pergunta que esta sprint deve responder
 
@@ -23,16 +23,18 @@
 - [x] Proposta de valor, objetivos e limites iniciais definidos.
 - [x] Integrantes e organização de trabalho registrados.
 - [x] GitHub Project criado e linkado ([`https://github.com/users/pstehling/projects/2`](https://github.com/users/pstehling/projects/2)).
-- [x] Issues iniciais com prioridade, responsável e critério de aceitação (issues [`#1`](https://github.com/pstehling/tp-eng-software/issues/1) a [`#10`](https://github.com/pstehling/tp-eng-software/issues/10), com conteúdo idêntico ao de `while-estuda-backlog-issues.pdf`).
+- [x] Issues iniciais com prioridade, responsável e critério de aceitação (issues [`#1`](https://github.com/pstehling/tp-eng-software/issues/1) a [`#10`](https://github.com/pstehling/tp-eng-software/issues/10).
 
 ### Links dos artefatos
 
 | Artefato criado/atualizado | Link na tag da sprint | O que mudou |
 |---|---|---|
-| `README.md` | `[PREENCHER após criar a tag sprint-01]` | Identificação do projeto, integrantes, resumo da solução e tecnologias consideradas. |
-| `docs/visao-geral.md` | `[PREENCHER após criar a tag sprint-01]` | Documento completo: problema, público, visão do produto, escopo inicial, restrições/premissas e diferenciais. |
-| `docs/backlog-produto.md` | `[PREENCHER após criar a tag sprint-01]` | Backlog inicial com 11 itens priorizados e estratégia de priorização. |
-| `src/` (estrutura inicial) | `[PREENCHER após criar a tag sprint-01]` | Esqueleto Node.js/Express com endpoint `/api/status` e páginas estáticas iniciais. |
+| `README.md` | [`blob/sprint-01/README.md`](https://github.com/pstehling/tp-eng-software/blob/sprint-01/README.md) | Identificação do projeto, integrantes, resumo da solução e tecnologias consideradas. |
+| `docs/visao-geral.md` | [`blob/sprint-01/docs/visao-geral.md`](https://github.com/pstehling/tp-eng-software/blob/sprint-01/docs/visao-geral.md) | Documento completo: problema, público, visão do produto, escopo inicial, restrições/premissas e diferenciais. |
+| `docs/backlog-produto.md` | [`blob/sprint-01/docs/backlog-produto.md`](https://github.com/pstehling/tp-eng-software/blob/sprint-01/docs/backlog-produto.md) | Backlog inicial com 11 itens priorizados e estratégia de priorização. |
+| `src/` (estrutura inicial) | [`tree/sprint-01/src`](https://github.com/pstehling/tp-eng-software/tree/sprint-01/src) | Esqueleto Node.js/Express com endpoint `/api/status` e páginas estáticas iniciais. |
+
+> Os links acima seguem o padrão `github.com/pstehling/tp-eng-software/blob/sprint-01/<caminho>` (ou `/tree/sprint-01/<pasta>` para diretórios). Eles só resolvem de fato depois que a tag `sprint-01` for criada e enviada com `git push origin sprint-01` — o padrão do link não depende de a tag já existir, só o conteúdo por trás dele.
 
 ## 4. Incremento da aplicação web — 0,75 ponto
 
@@ -67,8 +69,8 @@ npm test
 | Issue | Descrição | Responsável | Critério de aceitação/conclusão | Situação |
 |---|---|---|---|---|
 | `T-01` | Estruturar esqueleto executável da aplicação (Express + páginas estáticas + endpoint de status) | Grupo | Aplicação sobe localmente e o endpoint `/api/status` responde 200 | **Concluída** |
-| [`#1`](https://github.com/pstehling/tp-eng-software/issues/1) | Tela de Login | @gabrielrooocha, @joaovitormv | Critérios de aceitação na própria issue (idênticos a `while-estuda-backlog-issues.pdf`) | Aberta no GitHub — aguardando desenvolvimento |
-| [`#2`](https://github.com/pstehling/tp-eng-software/issues/2) | Tela de Autenticação (cadastro e verificação de conta) | @joaovitormv, @IsadoraRB-dge | Critérios de aceitação na própria issue (idênticos a `while-estuda-backlog-issues.pdf`) | Aberta no GitHub — aguardando desenvolvimento |
+| [`#1`](https://github.com/pstehling/tp-eng-software/issues/1) | Tela de Login | @gabrielrooocha, @joaovitormv | Critérios de aceitação na própria issue| Aberta no GitHub — aguardando desenvolvimento |
+| [`#2`](https://github.com/pstehling/tp-eng-software/issues/2) | Tela de Autenticação (cadastro e verificação de conta) | @joaovitormv, @IsadoraRB-dge | Critérios de aceitação na própria issue | Aberta no GitHub — aguardando desenvolvimento |
 
 ### Acompanhamento
 
@@ -82,8 +84,8 @@ npm test
 | Tipo de evidência | Link | O que comprova |
 |---|---|---|
 | Issue | [`#1`](https://github.com/pstehling/tp-eng-software/issues/1) a [`#10`](https://github.com/pstehling/tp-eng-software/issues/10) | As 10 histórias iniciais do backlog, com descrição, critério de aceitação, prioridade e responsáveis. |
-| Pull Request | `[PREENCHER]` | — |
-| Commit | `[PREENCHER — colar link do(s) commit(s) que criaram os documentos e a estrutura inicial]` | Criação da documentação e da estrutura da aplicação. |
+| Pull Request | `https://github.com/pstehling/tp-eng-software/pulls` | — |
+| Commit | `https://github.com/pstehling/tp-eng-software/commits/main/` | Criação da documentação e da estrutura da aplicação. |
 | Código/arquivo | `src/server.js`, `src/public/` | Estrutura inicial executável da aplicação. |
 | Teste/captura/relatório | `tests/status.test.js` | Execução local comprovando o endpoint `/api/status` (1/1 teste aprovado). |
 
@@ -95,15 +97,15 @@ Nesta sprint ainda não há requisitos funcionais formalizados (isso é entregue
 
 - **O que foi demonstrado:** Documentação de visão e backlog completas; aplicação mínima executável localmente com um endpoint funcional e testado.
 - **Critérios atendidos:** Problema delimitado com público e contexto; proposta de valor e escopo inicial definidos; integrantes registrados; estrutura executável presente no repositório.
-- **Itens não concluídos:** Criação da tag `sprint-01`.
+- **Itens não concluídos:** 
 - **Motivo das pendências:** O grupo concentrou o esforço na documentação, no backlog e na criação das issues/Project; a criação da tag ainda não foi feita.
 - **Feedback recebido e ajustes:** `[PREENCHER após a revisão/correção desta sprint]`
 
 ## 8. Retrospectiva e próxima sprint
 
-- **Funcionou bem:** `[PREENCHER PELO GRUPO]`
-- **Precisa melhorar:** `[PREENCHER PELO GRUPO]`
-- **Ação concreta para a próxima sprint:** Criar as tags `sprint-01` e `sprint-02`.
+- **Funcionou bem:** `Funcionou conforme o esperado`
+- **Precisa melhorar:** `Melhor gestão do tempo`
+- **Ação concreta para a próxima sprint:**
 
 ## 9. O que não será considerado suficiente
 
@@ -113,6 +115,6 @@ Nesta sprint ainda não há requisitos funcionais formalizados (isso é entregue
 
 ## 10. Links enviados no UFLA Virtual
 
-- **Tag `sprint-01`:** `[COLAR LINK — tag ainda não criada]`
-- **Este arquivo na tag:** `[COLAR LINK]`
-- **Observação adicional:** Ver pendências registradas nas seções 3, 5 e 6 deste arquivo antes de criar a tag.
+- **Tag `sprint-01`:** [`https://github.com/pstehling/tp-eng-software/tree/sprint-01`](https://github.com/pstehling/tp-eng-software/tree/sprint-01)
+- **Este arquivo na tag:** [`https://github.com/pstehling/tp-eng-software/blob/sprint-01/docs/sprints/sprint-01.md`](https://github.com/pstehling/tp-eng-software/blob/sprint-01/docs/sprints/sprint-01.md)
+- **Observação adicional:** Links pré-preenchidos seguindo o padrão do GitHub para arquivos/pastas dentro de uma tag; eles só carregam conteúdo depois que a tag `sprint-01` for de fato criada e enviada (`git push origin sprint-01`), tem q confirmar dps

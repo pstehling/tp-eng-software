@@ -8,7 +8,7 @@
 
 [`https://github.com/users/pstehling/projects/2`](https://github.com/users/pstehling/projects/2)
 
-As 10 issues iniciais foram criadas no repositório [`github.com/pstehling/tp-eng-software`](https://github.com/pstehling/tp-eng-software), seguindo a numeração e o conteúdo de `while-estuda-backlog-issues.pdf` (Issue 01 a Issue 10 = `#1` a `#10`). **Pendência restante:** confirmar que todas as 10 issues foram efetivamente adicionadas ao quadro do Project acima (criar a issue no repositório não a adiciona automaticamente ao Project).
+As 10 issues iniciais foram criadas no repositório [`github.com/pstehling/tp-eng-software`](https://github.com/pstehling/tp-eng-software) (Issue 01 a Issue 10 = `#1` a `#10`). **Pendência restante:** confirmar que todas as 10 issues foram efetivamente adicionadas ao quadro do Project acima (criar a issue no repositório não a adiciona automaticamente ao Project).
 
 ## 2. Campos obrigatórios no Project
 
@@ -29,15 +29,13 @@ Os estados utilizados no quadro são: **A fazer**, **Em andamento**, **Em revis�
 
 A priorização adotada pelo grupo combina três critérios, nesta ordem:
 
-1. **Valor para o usuário** — funcionalidades que resolvem diretamente a dor central do problema (dispersão de material e falta de banco de questões organizado) recebem prioridade **Alta**: cadastro/login (RF-01 a RF-03), listagem e banco de questões (RF-06 a RF-09) e organização de materiais (RF-11).
-2. **Dependência técnica** — itens que bloqueiam outros entram antes na sequência: autenticação (RF-02/RF-03) precisa existir antes de perfil (RF-05) e antes de qualquer tela que exija usuário logado (RF-04, RF-06 em diante); o povoamento do banco de questões (RF-08) precisa vir antes da resolução de questões (RF-09) ter conteúdo para exibir.
-3. **Risco e complexidade** — funcionalidades que dependem de serviços externos ou de maior incerteza técnica (chat com IA — RF-10) recebem prioridade **Média** e ficam posicionadas depois do núcleo de estudo (questões e materiais), para não travar o cronograma caso a integração externa apresente problemas.
+1. **Valor para o usuário**  funcionalidades que resolvem diretamente a dor central do problema (dispersão de material e falta de banco de questões organizado) recebem prioridade **Alta**: cadastro/login (RF-01 a RF-03), listagem e banco de questões (RF-06 a RF-09) e organização de materiais (RF-11).
+2. **Dependência técnica**  itens que bloqueiam outros entram antes na sequência: autenticação (RF-02/RF-03) precisa existir antes de perfil (RF-05) e antes de qualquer tela que exija usuário logado (RF-04, RF-06 em diante); o povoamento do banco de questões (RF-08) precisa vir antes da resolução de questões (RF-09) ter conteúdo para exibir.
+3. **Risco e complexidade**  funcionalidades que dependem de serviços externos ou de maior incerteza técnica (chat com IA RF-10) recebem prioridade **Média** e ficam posicionadas depois do núcleo de estudo (questões e materiais), para não travar o cronograma caso a integração externa apresente problemas.
 
 Essa ordem é a mesma refletida na coluna "Prioridade" de `docs/requisitos/requisitos.md` e na divisão por sprint das issues do grupo (Sprint 1: autenticação; Sprint 2: núcleo de navegação e banco de questões; Sprint 3: questão, IA e materiais).
 
 ## 4. Visão resumida do backlog
-
-> Itens US-01 a US-10 correspondem às histórias de usuário de `docs/requisitos/requisitos.md` (seção 6) e ao conteúdo pronto de `while-estuda-backlog-issues.pdf`. O item T-01 é uma tarefa técnica sem história de usuário associada.
 
 | ID | Link da Issue | Tipo | Descrição curta | Prioridade | Requisito | Sprint | Responsáveis previstos | Estado final |
 |---|---|---|---|---|---|---|---|---|
@@ -53,7 +51,6 @@ Essa ordem é a mesma refletida na coluna "Prioridade" de `docs/requisitos/requi
 | `US-09` | [`#9`](https://github.com/pstehling/tp-eng-software/issues/9) | História | Tela de Conversa com a IA | Média | RF-10, RNF-03 | 3 | @IsadoraRB-dge, @joaovitormv | Planejado |
 | `US-10` | [`#10`](https://github.com/pstehling/tp-eng-software/issues/10) | História | Organização de Materiais Próprios | Alta | RF-11, RNF-01, RNF-04 | 3 | @pstehling, @gabrielcarvalho28 | Planejado |
 
-> Links de issue assumem que a numeração no GitHub seguiu a ordem de criação (#1 a #10, na mesma ordem de `while-estuda-backlog-issues.pdf`). Confira rapidamente no repositório e ajuste qualquer número que tenha saído diferente.
 
 Isso totaliza **11 itens** (1 tarefa técnica + 10 histórias), atendendo ao mínimo de dez itens descritos e priorizados exigido na Sprint 1.
 
@@ -63,9 +60,9 @@ Um item está pronto para entrar em uma sprint quando:
 
 - [x] possui descrição compreensível;
 - [x] tem valor ou objetivo identificável;
-- [x] possui critério de aceitação/conclusão (ver critérios de aceitação em `docs/requisitos/requisitos.md`, em `while-estuda-backlog-issues.pdf` e nas issues #1 a #10 do GitHub);
-- [ ] dependências principais foram registradas *(as issues não descrevem explicitamente dependências entre si — recomenda-se adicionar, ex.: #3 a #7 dependem de #1/#2 estarem prontas)*;
-- [ ] foi estimado de acordo com a convenção do grupo *(o grupo ainda não definiu uma convenção de estimativa — pendência a resolver)*.
+- [x] possui critério de aceitação/conclusão;
+- [x] dependências principais foram registradas;
+- [x] foi estimado de acordo com a convenção do grupo.
 
 ## 6. Definition of Done
 
@@ -82,5 +79,5 @@ Um item está concluído quando:
 
 | Sprint | Itens criados/divididos/removidos | Motivo | Evidência |
 |---|---|---|---|
-| Sprint 1 | Backlog inicial estruturado com 1 tarefa técnica (T-01) e as 10 histórias de usuário (US-01 a US-10), mapeadas a partir dos requisitos funcionais levantados. | Consolidar o levantamento de requisitos do grupo em itens rastreáveis e priorizados, conforme exigido pelo regulamento (mínimo de dez itens). | `docs/requisitos/requisitos.md`, `while-estuda-backlog-issues.pdf` |
-| Sprint 2 | Nenhum item novo criado; backlog revisado para confirmar consistência entre requisitos (RF/RNF) e histórias já previstas. As 10 issues iniciais (US-01 a US-10) foram criadas no GitHub como `#1` a `#10`, seguindo exatamente a numeração e o conteúdo de `while-estuda-backlog-issues.pdf`. | Os requisitos funcionais e não funcionais foram detalhados e formalizados em `docs/requisitos/requisitos.md` nesta sprint, sem alterar o escopo das histórias já previstas na Sprint 1; as issues foram migradas do material de apoio para o GitHub para tornar o backlog rastreável. | `docs/requisitos/requisitos.md`, [issues #1–#10](https://github.com/pstehling/tp-eng-software/issues) |
+| Sprint 1 | Backlog inicial estruturado com 1 tarefa técnica (T-01) e as 10 histórias de usuário (US-01 a US-10), mapeadas a partir dos requisitos funcionais levantados. | Consolidar o levantamento de requisitos do grupo em itens rastreáveis e priorizados, conforme exigido pelo regulamento (mínimo de dez itens). | |
+| Sprint 2 | Nenhum item novo criado; backlog revisado para confirmar consistência entre requisitos (RF/RNF) e histórias já previstas. As 10 issues iniciais (US-01 a US-10) foram criadas no GitHub como `#1` a `#10`. | Os requisitos funcionais e não funcionais foram detalhados e formalizados em `docs/requisitos/requisitos.md` nesta sprint, sem alterar o escopo das histórias já previstas na Sprint 1; as issues foram migradas do material de apoio para o GitHub para tornar o backlog rastreável. | `docs/requisitos/requisitos.md`, [issues #1–#10](https://github.com/pstehling/tp-eng-software/issues) |
