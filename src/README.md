@@ -33,11 +33,12 @@ src/
 ├── package.json
 └── public/           # frontend estático servido pelo Express
     ├── index.html
+    ├── materiais.html
     ├── style.css
     └── script.js
 ```
 
-## O grupo deve substituir essa estrutura pelo projeto real e documentar
+## Adicionar:
 
 - tecnologias e versões definitivas (podem ser diferentes de Node/Express);
 - pré-requisitos;

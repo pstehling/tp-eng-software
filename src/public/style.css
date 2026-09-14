@@ -1,51 +1,71 @@
-:root {
-  color-scheme: light;
-  --fg: #1a1a1a;
-  --bg: #ffffff;
-  --accent: #2563eb;
-  --muted: #6b7280;
-}
 
 * {
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-  color: var(--fg);
-  background: var(--bg);
-  line-height: 1.5;
+    font-family: Arial, sans-serif;
+    background-color: #f8f7f5; 
+    color: #4A3525; 
 }
 
-.container {
-  max-width: 640px;
-  margin: 3rem auto;
-  padding: 0 1.5rem;
+header {
+    background-color: #5C4033; 
+    color: #FFFFFF; 
+    padding: 15px 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.tag {
-  display: inline-block;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--muted);
-  border: 1px solid var(--muted);
-  border-radius: 999px;
-  padding: 0.15rem 0.6rem;
-  margin-bottom: 1rem;
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-button {
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 0.6rem 1.1rem;
-  font-size: 0.95rem;
-  cursor: pointer;
+.logo {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #FFFFFF;
 }
 
-button:hover {
-  opacity: 0.9;
+.menu {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.menu li a {
+    color: #FFFFFF; 
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s;
+}
+
+.menu li a:hover {
+    color: #D7CCC8; 
+}
+
+
+main {
+    background-color: #FFFFFF;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 50px 30px;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid #D7CCC8; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+main h1 {
+    margin-bottom: 15px;
+    color: #4A3525; 
+}
+
+main p {
+    font-size: 1.1rem;
+    color: #6D4C41; 
 }
