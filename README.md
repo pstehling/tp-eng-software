@@ -10,8 +10,8 @@
 | Problema escolhido | `Falta de matérias e centralização para o estudo na área da computação` |
 | Turma/semestre | Engenharia de Software — 2026/2 |
 | Professor | Prof. Johnatan Oliveira |
-| Link do GitHub Project | `https://github.com/pstehling/tp-eng-software.git` |
-| Link da aplicação publicada | `[COLAR LINK ]` |
+| Link do GitHub Project | [`https://github.com/users/pstehling/projects/2`](https://github.com/users/pstehling/projects/2) |
+| Link da aplicação publicada | `Ainda não publicada — aplicação roda localmente (ver seção 7). Publicação prevista para sprints futuras.` |
 | Link do vídeo final | `[PREENCHER NA ENTREGA FINAL]` |
 
 ### Integrantes
@@ -38,6 +38,20 @@
 - `Resolução de questões`
 - `Organização de pastas e arquivos de diretórios para centralização de arquivos e materiais`
 - `Chat com IA que auxilia nas dúvidas e em temas específicos`
+
+**Tecnologias inicialmente consideradas:**
+
+| Camada | Tecnologia | Observação |
+|---|---|---|
+| Backend | Node.js + Express | Estrutura inicial em `src/server.js`, usada como esqueleto executável desde a Sprint 1. |
+| Frontend | HTML, CSS e JavaScript (estático, servido pelo Express) | Páginas iniciais em `src/public/` (`index.html`, `materiais.html`). Poderá evoluir para um framework (ex.: React) nas próximas sprints, conforme necessidade. |
+| Autenticação/Segurança | JWT + hash de senha (bcrypt ou Argon2) | Previsto pelos requisitos RNF-02; ainda não implementado no código. |
+| Persistência de dados | A definir | Necessário para usuários, questões e materiais (RF-01, RF-07, RF-11); decisão registrada em `docs/projeto/decisoes-de-projeto.md` a partir da Sprint 4. |
+| IA / Chat contextualizado | API externa de IA (provedor a definir) | Chave mantida apenas no backend, conforme RN-05. |
+| Testes | `node:test` (nativo do Node.js) | Ver `tests/`. |
+| Integração contínua | GitHub Actions | Workflow em `.github/workflows/ci.yml`, roda `npm test` a cada push/PR na `main`. |
+
+> Lista sujeita a revisão nas próximas sprints (Sprint 4 — princípios de projeto — e Sprint 6 — arquitetura), conforme o regulamento do trabalho.
 
 ## 3. Comece por aqui
 
