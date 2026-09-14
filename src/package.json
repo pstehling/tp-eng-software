@@ -1,7 +1,7 @@
 {
-  "name": "[nome-do-projeto]",
+  "name": "While(estuda)",
   "version": "0.1.0",
-  "description": "[PREENCHER] Aplicação web do Trabalho Final de Engenharia de Software.",
+  "description": "Aplicação web do Trabalho Final de Engenharia de Software.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
