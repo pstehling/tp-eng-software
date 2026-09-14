@@ -1,6 +1,6 @@
 # Reunião — Reunião inicial: definição do problema, visão do produto e backlog
 
-- **Data e horário:** `[PREENCHER PELO GRUPO — data e horário reais da reunião]`
+- **Data e horário:** `12/09/2026 - 19h`
 - **Participantes:** Pedro Stehling Mendes (@pstehling), Gabriel Soares Carvalho (@gabrielcarvalho28), Isadora Rocha Brito (@IsadoraRB-dge), Joao Vitor Maximiliom Vieira (@joaovitormv), Gabriel Rocha de Almeida (@gabrielrooocha)
 - **Sprint:** Sprints 1 e 2 — reunião inicial do grupo, na qual foram tomadas as decisões que sustentam os artefatos de ambas as sprints
 - **Objetivo:** Definir o problema a ser tratado, a visão do produto, o escopo inicial, os papéis de cada integrante, as tecnologias consideradas e estruturar o backlog inicial priorizado, servindo de base para o `README.md`, `docs/visao-geral.md`, `docs/backlog-produto.md` e `docs/requisitos/requisitos.md`.
