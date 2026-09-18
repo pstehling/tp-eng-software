@@ -52,6 +52,7 @@ Os requisitos do **While(estuda)** foram identificados e consolidados por meio d
 ## **6\. Histórias de usuário e critérios de aceitação**
 
 ### **US-01 — Tela de Login**
+Links para o drive com as histórias de usário completa: https://drive.google.com/drive/folders/1f8o5BMjtLZeF1OhzzGDfxfk1CFpEldtI?usp=sharing
 
 Como *estudante cadastrado*, quero *acessar a plataforma informando e-mail e senha*, para *retomar meus estudos e materiais salvos*.
 
