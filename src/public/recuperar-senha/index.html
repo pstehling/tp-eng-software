@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Recuperação de Senha</title>
+</head>
+<body>
+    <div id="mensagem" style="display: none; margin-bottom: 15px;"></div>
+
+    <!-- TELA 1: Pedir o link (Aparece por padrão) -->
+    <form id="form-pedir-link">
+        <h2>Esqueci minha senha</h2>
+        <p>Digite seu e-mail para receber o link de redefinição.</p>
+        <input type="email" id="email" placeholder="E-mail cadastrado" required>
+        <button type="submit" id="btn-enviar">Enviar Link</button>
+        <br><br><a href="/login">Voltar para o login</a>
+    </form>
+
+    <!-- TELA 2: Digitar a nova senha (Fica oculta até o usuário clicar no e-mail) -->
+    <form id="form-nova-senha" style="display: none;">
+        <h2>Criar Nova Senha</h2>
+        <input type="password" id="nova-senha" placeholder="Nova senha (min 6 chars)" required minlength="6">
+        <button type="submit" id="btn-salvar">Salvar Nova Senha</button>
+    </form>
+
+    <script src="./script.js"></script>
+</body>
+</html>
