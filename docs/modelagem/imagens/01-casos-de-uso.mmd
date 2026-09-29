@@ -1,0 +1,47 @@
+flowchart LR
+    EST([Estudante ACT-01])
+    ADM([Administrador ACT-02])
+    IA([Serviço de IA ACT-03])
+
+    ADM -. "também é estudante" .-> EST
+
+    subgraph CONTA["Conta"]
+        UC1["Cadastrar-se - RF-01"]
+        UC2["Verificar e-mail - RF-03"]
+        UC3["Entrar / Sair - RF-02"]
+        UC4["Recuperar senha - RF-03"]
+        UC5["Gerir perfil - RF-05"]
+    end
+
+    subgraph ESTUDO["Estudo"]
+        UC6["Ver painel inicial - RF-04"]
+        UC7["Listar matérias - RF-06"]
+        UC8["Buscar e filtrar questões - RF-07"]
+        UC9["Resolver questão - RF-09"]
+        UC10["Conversar com a IA - RF-10"]
+    end
+
+    subgraph MATERIAIS["Materiais"]
+        UC11["Organizar pastas, arquivos e anotações - RF-11"]
+    end
+
+    subgraph ADMINISTRACAO["Administração"]
+        UC12["Cadastrar / importar questões - RF-08"]
+    end
+
+    EST --- UC1
+    EST --- UC2
+    EST --- UC3
+    EST --- UC4
+    EST --- UC5
+    EST --- UC6
+    EST --- UC7
+    EST --- UC8
+    EST --- UC9
+    EST --- UC10
+    EST --- UC11
+
+    ADM --- UC12
+
+    UC9 -. "extend" .-> UC10
+    UC10 --- IA

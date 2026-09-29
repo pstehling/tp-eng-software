@@ -6,6 +6,7 @@ const mensagem = document.getElementById('mensagem');
 const hashUrl = window.location.hash;
 const parametros = new URLSearchParams(hashUrl.substring(1));
 const accessToken = parametros.get('access_token');
+const refreshToken = parametros.get('refresh_token');
 
 if (accessToken) {
     // Esconde o formulário de pedir e-mail e mostra o de nova senha
@@ -36,7 +37,7 @@ formNova.addEventListener('submit', async (evento) => {
     const resposta = await fetch('/api/salvar-nova-senha', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token_acesso: accessToken, nova_senha: novaSenha })
+        body: JSON.stringify({ token_acesso: accessToken, refresh_token: refreshToken, nova_senha: novaSenha })
     });
     
     const dados = await resposta.json();

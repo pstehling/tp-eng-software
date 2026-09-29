@@ -18,9 +18,9 @@ Os requisitos do **While(estuda)** foram identificados e consolidados por meio d
 
 | ID | Nome | Descrição verificável | Prioridade | História/Issue | Situação final |
 | :---- | :---- | :---- | :---- | :---- | :---- |
-| RF-01 | Cadastro com e-mail institucional | O sistema deve permitir que o estudante se cadastre informando nome, e-mail institucional e senha válida. | Alta | \#02 | Planejado |
-| RF-02 | Autenticação e Sessão Persistente | O sistema deve permitir que o estudante realize login e logout com e-mail e senha, mantendo a sessão autenticada. | Alta | \#01 | Planejado |
-| RF-03 | Verificação e Recuperação de Conta | O sistema deve enviar e-mail de verificação para novos cadastros e permitir a recuperação de senha via link temporário. | Alta | \#02 | Planejado |
+| RF-01 | Cadastro com e-mail institucional | O sistema deve permitir que o estudante se cadastre informando nome, e-mail institucional e senha válida. | Alta | \#02 | Implementado |
+| RF-02 | Autenticação e Sessão Persistente | O sistema deve permitir que o estudante realize login e logout com e-mail e senha, mantendo a sessão autenticada. | Alta | \#01 | Implementado parcialmente (login implementado; logout ainda não) |
+| RF-03 | Verificação e Recuperação de Conta | O sistema deve enviar e-mail de verificação para novos cadastros e permitir a recuperação de senha via link temporário. | Alta | \#02 | Implementado |
 | RF-04 | Tela Inicial do Usuário | O sistema deve exibir um painel com saudações, progresso de estudos, atalhos rápidos e materiais acessados recentemente. | Alta | \#03 | Planejado |
 | RF-05 | Gestão de Perfil | O sistema deve permitir que o usuário visualize e edite suas informações de perfil, avatar, curso e senha. | Média | \#04 | Planejado |
 | RF-06 | Listagem e Detalhes de Matérias | O sistema deve apresentar a lista de disciplinas de computação com contagem de questões e tópicos associados. | Alta | \#05 | Planejado |
@@ -196,4 +196,7 @@ Como *estudante*, quero *organizar meus resumos, anotações e listas em pastas 
 | Sprint | Requisito alterado | Alteração | Motivo | Issue/commit |
 | :---- | :---- | :---- | :---- | :---- |
 | Sprint 2 | Todos os Requisitos | Estruturação inicial do documento de requisitos e detalhamento das Histórias de Usuário em formato BDD. | Mapeamento e consolidação das entregas da disciplina de Engenharia de Software. | \#01 \- \#10 |
+| Sprint 3 | RF-01 / RN-01 | Esclarecido o que é "e-mail institucional": domínios `ufla.br` e `estudante.ufla.br` (configuráveis). | A modelagem precisou de uma regra verificável para `Usuario.validarCadastro()`; regra confirmada pelo grupo. | `src/models/usuario.js` |
+| Sprint 3 | RF-01 / RF-03 | Esclarecida a "senha válida": mínimo de 8 caracteres, com pelo menos uma letra e um número; a mesma regra vale para a nova senha na recuperação. | Critério necessário para validar cadastro e redefinição de senha de forma objetiva; regra confirmada pelo grupo. | `src/models/usuario.js` |
+| Sprint 3 | RF-01, RF-02, RF-03 | Situação atualizada após a implementação do cadastro, login e recuperação de senha. | Fluxo modelado em `docs/modelagem/modelagem.md` (4.1) e implementado. | [PR \#15](https://github.com/pstehling/tp-eng-software/pull/15) |
 

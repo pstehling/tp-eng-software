@@ -1,0 +1,19 @@
+sequenceDiagram
+    actor E as Estudante
+    participant UI as Frontend
+    participant API as Backend
+    participant Q as Questao
+
+    E->>UI: Escolhe matéria e filtros
+    UI->>API: GET /api/questoes?materia&topico&dificuldade&q
+    API->>Q: Questao.filtrar()
+    Q-->>API: Questões filtradas
+    API-->>UI: Lista de questões
+
+    E->>UI: Seleciona alternativa e confirma
+    UI->>API: POST /api/questoes/:id/respostas
+    API->>Q: corrigir(usuarioId, alternativaId)
+    Q-->>API: RespostaQuestao(correta)
+
+    API->>API: Salva RespostaQuestao
+    API-->>UI: Correta? + gabarito + explicação

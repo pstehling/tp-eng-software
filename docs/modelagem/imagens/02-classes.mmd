@@ -1,0 +1,108 @@
+classDiagram
+
+    class Usuario {
+        +id
+        +nome
+        +email
+        +senhaHash
+        +papel : ESTUDANTE|ADMIN
+        +status : PENDENTE_VERIFICACAO|ATIVO
+        +avatarUrl
+        +curso
+        +validarCadastro()
+        +podeAutenticar()
+        +verificarEmail(token)
+        +podeEditarBancoDeQuestoes()
+    }
+
+    class TokenVerificacao {
+        +tipo : VERIFICACAO_EMAIL|RECUPERACAO_SENHA
+        +expiraEm
+        +usadoEm
+        +estaValido()
+        +consumir()
+    }
+
+    class Materia {
+        +id
+        +nome
+        +descricao
+    }
+
+    class Topico {
+        +id
+        +nome
+    }
+
+    class Questao {
+        +id
+        +enunciado
+        +dificuldade : FACIL|MEDIA|DIFICIL
+        +alternativaCorretaId
+        +explicacao
+        +validar()
+        +corrigir(usuarioId, alternativaId)
+        +filtrar(questoes, filtros)
+    }
+
+    class Alternativa {
+        +id
+        +texto
+    }
+
+    class RespostaQuestao {
+        +alternativaId
+        +correta
+        +respondidaEm
+    }
+
+    class ItemDoRepositorio {
+        <<abstract>>
+        +id
+        +nome
+        +acessivelPor(usuarioId)
+    }
+
+    class Pasta
+
+    class Arquivo {
+        +tipoMime
+        +tamanhoBytes
+        +ultimoAcessoEm
+    }
+
+    class Anotacao {
+        +conteudo
+        +ultimoAcessoEm
+    }
+
+    class ConversaIA {
+        +id
+        +contexto
+        +adicionar(autor, texto)
+        +historicoParaEnvio()
+    }
+
+    class MensagemIA {
+        +autor : USUARIO|IA
+        +texto
+        +criadaEm
+    }
+
+    Usuario "1" --> "0..*" TokenVerificacao : possui
+    Materia "1" *-- "1..*" Topico : contém
+    Topico "1" o-- "0..*" Questao : classifica
+    Questao "1" *-- "2..*" Alternativa : compõe
+    Usuario "1" --> "0..*" RespostaQuestao : registra
+    Questao "1" <-- "0..*" RespostaQuestao : responde
+
+    Usuario "1" --> "0..*" ItemDoRepositorio : é dono de
+    ItemDoRepositorio <|-- Pasta
+    ItemDoRepositorio <|-- Arquivo
+    ItemDoRepositorio <|-- Anotacao
+    Pasta "0..1" o-- "0..*" ItemDoRepositorio : agrupa
+
+    Usuario "1" --> "0..*" ConversaIA : inicia
+    ConversaIA "1" *-- "0..*" MensagemIA : contém
+    ConversaIA "0..*" --> "0..1" Questao : contexto
+    ConversaIA "0..*" --> "0..1" Materia : contexto

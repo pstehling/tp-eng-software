@@ -44,9 +44,9 @@
 | Camada | Tecnologia | Observação |
 |---|---|---|
 | Backend | Node.js + Express | Estrutura inicial em `src/server.js`, usada como esqueleto executável desde a Sprint 1. |
-| Frontend | HTML, CSS e JavaScript (estático, servido pelo Express) | Páginas iniciais em `src/public/` (`index.html`, `materiais.html`). Poderá evoluir para um framework (ex.: React) nas próximas sprints, conforme necessidade. |
-| Autenticação/Segurança | JWT + hash de senha (bcrypt ou Argon2) | Previsto pelos requisitos RNF-02; ainda não implementado no código. |
-| Persistência de dados | A definir | Necessário para usuários, questões e materiais (RF-01, RF-07, RF-11); decisão registrada em `docs/projeto/decisoes-de-projeto.md` a partir da Sprint 4. |
+| Frontend | HTML, CSS e JavaScript (estático, servido pelo Express) | Páginas em `src/public/` (início, materiais, cadastro, login e recuperação de senha). Poderá evoluir para um framework (ex.: React) nas próximas sprints, conforme necessidade. |
+| Autenticação/Segurança | Supabase Auth (hash de senha e sessão JWT) | Implementado na Sprint 3 ([PR #15](https://github.com/pstehling/tp-eng-software/pull/15)); as regras de domínio ficam em `src/models/usuario.js`. |
+| Persistência de dados | Supabase (PostgreSQL) para usuários; demais entidades a definir | Questões e materiais (RF-07, RF-11) ainda não são persistidos; decisão registrada em `docs/projeto/decisoes-de-projeto.md` a partir da Sprint 4. |
 | IA / Chat contextualizado | API externa de IA (provedor a definir) | Chave mantida apenas no backend, conforme RN-05. |
 | Testes | `node:test` (nativo do Node.js) | Ver `tests/`. |
 | Integração contínua | GitHub Actions | Workflow em `.github/workflows/ci.yml`, roda `npm test` a cada push/PR na `main`. |
@@ -125,17 +125,19 @@ Cada sprint vale **2,5 pontos**:
 └── scripts/validar_repositorio.py
 ```
 
-## 7. Execução da aplicação de exemplo
+## 7. Execução da aplicação
 
-A pasta `src/` contém uma estrutura mínima em **Node.js + Express** apenas para demonstrar que, desde a Sprint 1, o repositório deve possuir uma aplicação executável.
+A aplicação é um servidor **Node.js + Express** que serve as páginas de `src/public/` e expõe a API de autenticação (Supabase Auth). Pré-requisito: Node.js 20 ou superior.
 
 ```bash
 cd src
 npm install
-npm start
+cp .env.example .env   # preencha SUPABASE_URL e SUPABASE_ANON_KEY
+npm start              # http://localhost:3000
+npm test               # testes automatizados em tests/
 ```
 
-Abra `http://localhost:3000`. O grupo deverá substituir esse exemplo pela tecnologia e pelo código reais do projeto (ver [`src/README.md`](src/README.md)).
+Detalhes de configuração em [`src/README.md`](src/README.md). Sem o `.env`, as páginas abrem normalmente, mas cadastro e login respondem que o serviço de autenticação não está configurado.
 
 ## 8. Regra de ouro da rastreabilidade
 

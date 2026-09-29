@@ -1,19 +1,34 @@
 # Matriz de rastreabilidade
 
 > Atualize esta tabela ao longo do semestre. Células vazias devem ser justificadas; não invente links ou evidências.
+>
+> **Última atualização:** Sprint 3 — 29/09/2026. Decisões de projeto, padrões e arquitetura serão preenchidos a partir das Sprints 4, 5 e 6; os casos de teste formais (`CT-XX`), a partir da Sprint 7. Até lá, a coluna "Teste" aponta para os arquivos de teste automatizado já existentes.
 
-| Requisito | História/Issue | Modelo | Decisão/padrão/arquitetura | Código | Caso de teste | Resultado/evidência | Situação final |
+| Requisito | História/Issue | Modelo | Decisão/padrão/arquitetura | Código | Teste | Resultado/evidência | Situação atual |
 |---|---|---|---|---|---|---|---|
-| `RF-01` | `#XX` | `[link]` | `DP-01` | `[arquivo/linha ou diretório]` | `CT-01` | `[link]` | Planejado |
-| `RNF-01` | `#XX` | `[quando aplicável]` | `DA-01` | `[configuração/código]` | `CT-XX` | `[link]` | Planejado |
+| `RF-01` | US-02 / [#2](https://github.com/pstehling/tp-eng-software/issues/2) | Classes (`Usuario`), 4.1, 4.5 | Sprint 4 | [`src/models/usuario.js`](../src/models/usuario.js), [`src/server.js`](../src/server.js) (`/api/cadastro`), [`src/public/cadastro/`](../src/public/cadastro/) | [`tests/models.test.js`](../tests/models.test.js), [`tests/auth.test.js`](../tests/auth.test.js) | Testes aprovados (Sprint 3); [PR #15](https://github.com/pstehling/tp-eng-software/pull/15) | Implementado |
+| `RF-02` | US-01 / [#1](https://github.com/pstehling/tp-eng-software/issues/1) | Classes (`Usuario.podeAutenticar`), 4.1 | Sprint 4 | [`src/server.js`](../src/server.js) (`/api/login`), [`src/public/login/`](../src/public/login/) | [`tests/auth.test.js`](../tests/auth.test.js) | Testes aprovados (Sprint 3); [PR #15](https://github.com/pstehling/tp-eng-software/pull/15) | Parcial (logout pendente) |
+| `RF-03` | US-02 / [#2](https://github.com/pstehling/tp-eng-software/issues/2) | Classes (`TokenVerificacao`), 4.1, 4.5 | Sprint 4 | [`src/models/usuario.js`](../src/models/usuario.js), [`src/server.js`](../src/server.js) (`/api/recuperar-senha`, `/api/salvar-nova-senha`), [`src/public/recuperar-senha/`](../src/public/recuperar-senha/) | [`tests/models.test.js`](../tests/models.test.js), [`tests/auth.test.js`](../tests/auth.test.js) | Testes aprovados (Sprint 3) | Implementado |
+| `RF-04` | US-03 / [#3](https://github.com/pstehling/tp-eng-software/issues/3) | Classes (`RespostaQuestao`) | Sprint 4 | [`src/models/questao.js`](../src/models/questao.js) (`calcularProgresso`) | [`tests/models.test.js`](../tests/models.test.js) | Regra de progresso testada; tela ainda não existe | Modelado |
+| `RF-05` | US-04 / [#4](https://github.com/pstehling/tp-eng-software/issues/4) | Classes (`Usuario`) | Sprint 4 | [`src/models/usuario.js`](../src/models/usuario.js) | — | Tela e endpoints ainda não implementados | Modelado |
+| `RF-06` | US-05 / [#5](https://github.com/pstehling/tp-eng-software/issues/5) | Classes (`Materia`, `Topico`) | Sprint 4 | [`src/models/questao.js`](../src/models/questao.js) | — | Tela e endpoints ainda não implementados | Modelado |
+| `RF-07` | US-06 / [#6](https://github.com/pstehling/tp-eng-software/issues/6) | Classes (`Questao.filtrar`), 4.2 | Sprint 4 | [`src/models/questao.js`](../src/models/questao.js) | [`tests/models.test.js`](../tests/models.test.js) | Regra de filtro testada; tela ainda não existe | Modelado |
+| `RF-08` | US-07 / [#7](https://github.com/pstehling/tp-eng-software/issues/7) | Classes (`Questao.validar`, `Alternativa`) | Sprint 4 | [`src/models/questao.js`](../src/models/questao.js) | [`tests/models.test.js`](../tests/models.test.js) | Validação testada; cadastro/importação ainda não existe | Modelado |
+| `RF-09` | US-08 / [#8](https://github.com/pstehling/tp-eng-software/issues/8) | Classes (`Questao.corrigir`), 4.2 | Sprint 4 | [`src/models/questao.js`](../src/models/questao.js) | [`tests/models.test.js`](../tests/models.test.js) | Correção testada; tela ainda não existe | Modelado |
+| `RF-10` | US-09 / [#9](https://github.com/pstehling/tp-eng-software/issues/9) | Classes (`ConversaIA`), 4.3 | Sprint 4 | [`src/models/conversa.js`](../src/models/conversa.js) | [`tests/models.test.js`](../tests/models.test.js) | Histórico/contexto testados; integração com IA ainda não existe | Modelado |
+| `RF-11` | US-10 / [#10](https://github.com/pstehling/tp-eng-software/issues/10) | Classes (`ItemDoRepositorio` e filhas), 4.4 | Sprint 4 | [`src/models/materiais.js`](../src/models/materiais.js) | [`tests/models.test.js`](../tests/models.test.js) | Regras de acesso e upload testadas; tela ainda não existe | Modelado |
+| `RNF-01` | [#3](https://github.com/pstehling/tp-eng-software/issues/3), [#8](https://github.com/pstehling/tp-eng-software/issues/8), [#10](https://github.com/pstehling/tp-eng-software/issues/10) | — (não representado nos modelos) | Sprint 6 | `src/public/` | — | Avaliação com Lighthouse prevista para a Sprint 7 | Planejado |
+| `RNF-02` | [#1](https://github.com/pstehling/tp-eng-software/issues/1), [#2](https://github.com/pstehling/tp-eng-software/issues/2) | 4.1 | Supabase Auth (hash e JWT) | [`src/server.js`](../src/server.js) | [`tests/auth.test.js`](../tests/auth.test.js) | Hash e sessão delegados ao Supabase; rotas privadas ainda não existem | Parcial |
+| `RNF-03` | [#6](https://github.com/pstehling/tp-eng-software/issues/6) | 4.2 (`Questao.filtrar`) | Sprint 6 | [`src/models/questao.js`](../src/models/questao.js) | — | Teste de tempo de resposta previsto para a Sprint 7 | Planejado |
+| `RNF-04` | [#10](https://github.com/pstehling/tp-eng-software/issues/10) | 4.4 (`validarUpload`) | Sprint 4 | [`src/models/materiais.js`](../src/models/materiais.js) | [`tests/models.test.js`](../tests/models.test.js) | Formatos e limite de 50 MB testados | Modelado |
 
 ## Como preencher
 
 - **Requisito:** identificador existente em `docs/requisitos/requisitos.md`.
 - **História/Issue:** link direto para a Issue no GitHub.
-- **Modelo:** seção, diagrama ou arquivo que representa o requisito.
+- **Modelo:** seção, diagrama ou arquivo que representa o requisito (seções de `docs/modelagem/modelagem.md`).
 - **Decisão/padrão/arquitetura:** identificador da decisão técnica pertinente.
 - **Código:** link para o arquivo ou diretório na tag da sprint.
-- **Caso de teste:** identificador definido no plano de testes.
+- **Teste:** arquivo de teste automatizado ou caso de teste do plano de testes.
 - **Resultado/evidência:** relatório, captura, log ou execução documentada.
-- **Situação final:** atendido, parcialmente atendido, não atendido ou retirado do escopo com justificativa.
+- **Situação atual:** planejado, modelado (regra de domínio implementada e testada, sem tela), parcial, implementado ou retirado do escopo com justificativa.

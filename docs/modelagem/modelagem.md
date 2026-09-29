@@ -14,6 +14,20 @@
 | Regras de upload de materiais  | Comportamental | Quais arquivos podem ser enviados e quais regras de acesso e armazenamento devem ser aplicadas? | RF-11, RN-04, RNF-04                      |
 | Estados do usuário             | Comportamental | Quais estados uma conta pode assumir e como ocorre a transição entre eles?                      | RF-03, RN-03                              |
 
+### 1.1 Arquivos dos diagramas
+
+Os diagramas estão escritos em Mermaid dentro deste documento (renderizados pelo GitHub). Para garantir a leitura fora do GitHub, cada um também está versionado como arquivo-fonte (`.mmd`) e imagem (`.png`) em [`docs/modelagem/imagens/`](imagens/).
+
+| Seção | Diagrama | Arquivo-fonte | Imagem |
+|---|---|---|---|
+| 2 | Casos de uso | [`01-casos-de-uso.mmd`](imagens/01-casos-de-uso.mmd) | [`01-casos-de-uso.png`](imagens/01-casos-de-uso.png) |
+| 3.1 | Classes / entidades de domínio | [`02-classes.mmd`](imagens/02-classes.mmd) | [`02-classes.png`](imagens/02-classes.png) |
+| 4.1 | Cadastro, verificação e login | [`03-sequencia-cadastro-login.mmd`](imagens/03-sequencia-cadastro-login.mmd) | [`03-sequencia-cadastro-login.png`](imagens/03-sequencia-cadastro-login.png) |
+| 4.2 | Resolver questão | [`04-sequencia-resolver-questao.mmd`](imagens/04-sequencia-resolver-questao.mmd) | [`04-sequencia-resolver-questao.png`](imagens/04-sequencia-resolver-questao.png) |
+| 4.3 | Dúvida com IA | [`05-sequencia-duvida-ia.mmd`](imagens/05-sequencia-duvida-ia.mmd) | [`05-sequencia-duvida-ia.png`](imagens/05-sequencia-duvida-ia.png) |
+| 4.4 | Regras de upload de materiais | [`06-atividade-upload.mmd`](imagens/06-atividade-upload.mmd) | [`06-atividade-upload.png`](imagens/06-atividade-upload.png) |
+| 4.5 | Estados do usuário | [`07-estados-usuario.mmd`](imagens/07-estados-usuario.mmd) | [`07-estados-usuario.png`](imagens/07-estados-usuario.png) |
+
 ---
 
 ## 2. Modelo de casos de uso
@@ -125,6 +139,7 @@ classDiagram
         +dificuldade : FACIL|MEDIA|DIFICIL
         +alternativaCorretaId
         +explicacao
+        +validar()
         +corrigir(usuarioId, alternativaId)
         +filtrar(questoes, filtros)
     }
@@ -208,57 +223,54 @@ classDiagram
 
 ### 4.1 Cadastro, verificação e login
 
-O fluxo representa o processo necessário para liberar o acesso às telas privadas do sistema.
+O fluxo representa o processo necessário para liberar o acesso às telas privadas do sistema. Na Sprint 3 o diagrama foi **alinhado à implementação** feita no [PR #15](https://github.com/pstehling/tp-eng-software/pull/15): a geração do hash da senha, o envio do e-mail e a validação do token de verificação ficam a cargo do **Supabase Auth**, enquanto as regras de domínio (e-mail institucional e regra de senha) ficam em `Usuario` ([`src/models/usuario.js`](../../src/models/usuario.js)) e são aplicadas pelo backend antes de qualquer chamada externa.
 
-As principais decisões são: utilizar uma mensagem genérica para falhas de login, impedir a autenticação de contas que ainda não verificaram o e-mail e manter hash de senha e JWT na camada de serviço.
+As principais decisões são: utilizar uma mensagem genérica para falhas de login, impedir a autenticação de contas que ainda não verificaram o e-mail e manter hash de senha e sessão (JWT) fora do modelo de domínio.
 
 ```mermaid
 sequenceDiagram
     actor E as Estudante
-    participant UI as Frontend
-    participant API as Backend
-    participant M as Usuario / TokenVerificacao
-    participant MAIL as Serviço de e-mail
+    participant UI as Frontend (cadastro/ e login/)
+    participant API as Backend (server.js)
+    participant M as Usuario (models/usuario.js)
+    participant AUTH as Supabase Auth
 
     E->>UI: Preenche nome, e-mail e senha
-    UI->>API: POST /api/auth/cadastro
+    UI->>API: POST /api/cadastro
     API->>M: Usuario.validarCadastro()
 
     alt Dados inválidos ou e-mail não institucional
         M-->>API: erros[]
         API-->>UI: 400 + mensagens
-    else E-mail já cadastrado
-        API-->>UI: 409 "e-mail já cadastrado"
     else Dados válidos
-        API->>API: senhaHash = hash(senha)
-        API->>M: Cria Usuario(status=PENDENTE_VERIFICACAO) + Token
-        API->>MAIL: Envia link de verificação
-        API-->>UI: 201 "verifique seu e-mail"
+        API->>AUTH: signUp(email, senha)
+        alt E-mail já cadastrado
+            AUTH-->>API: erro "already registered"
+            API-->>UI: 409 e-mail já cadastrado
+        else Conta criada como PENDENTE_VERIFICACAO
+            AUTH->>AUTH: Gera o hash da senha
+            AUTH-->>E: E-mail com link de verificação
+            API-->>UI: 201 verifique seu e-mail
+        end
     end
 
-    E->>API: GET /api/auth/verificar?token=...
-    API->>M: usuario.verificarEmail(token)
-
-    alt Token válido
-        M-->>API: status=ATIVO
-        API-->>E: Conta ativada
-    else Token expirado ou já usado
-        M-->>API: erro
-        API-->>E: Link inválido, reenviar
-    end
+    E->>AUTH: Abre o link de verificação
+    AUTH->>AUTH: Token válido, conta passa a ATIVO
 
     E->>UI: E-mail + senha
-    UI->>API: POST /api/auth/login
-    API->>M: usuario.podeAutenticar()
+    UI->>API: POST /api/login
+    API->>AUTH: signInWithPassword()
 
-    alt Credenciais inválidas ou conta pendente
+    alt Conta ainda pendente
+        API-->>UI: 403 confirme seu e-mail
+    else Credenciais inválidas
         API-->>UI: 401 mensagem genérica
     else Autenticação válida
-        API-->>UI: 200 + JWT
+        API-->>UI: 200 + redirecionamento (sessão JWT gerida pelo Supabase)
     end
 ```
 
-**Descrição e decisões representadas:** o cadastro cria inicialmente uma conta com status `PENDENTE_VERIFICACAO`. Após a validação do token, a conta passa para `ATIVO`. O login só é permitido quando a conta pode ser autenticada. O tratamento de senha e JWT permanece fora do modelo de domínio.
+**Descrição e decisões representadas:** o cadastro só chega ao serviço de autenticação depois de passar por `Usuario.validarCadastro()` (RN-01 e regra de senha); caso contrário, o backend responde `400` sem chamar o Supabase. A conta é criada como `PENDENTE_VERIFICACAO` e só passa a `ATIVO` com o token do e-mail. No login, a conta pendente recebe `403` com orientação para confirmar o e-mail, e credenciais inválidas recebem `401` com mensagem genérica (US-01, critério 2). Em relação à primeira versão do modelo, os endpoints propostos (`/api/auth/...`) foram substituídos pelos efetivamente implementados (`/api/cadastro`, `/api/login`, `/api/recuperar-senha`, `/api/salvar-nova-senha`), e o caso "conta pendente" foi separado de "credenciais inválidas" por ter tratamento diferente no código. O comportamento está coberto por [`tests/auth.test.js`](../../tests/auth.test.js).
 
 ---
 
@@ -346,7 +358,7 @@ flowchart TD
     F --> H["Disponibilizar item no repositório"]
 ```
 
-**Descrição e decisões representadas:** a validação do upload deve garantir os formatos permitidos e o limite máximo de 50 MB. A regra de privacidade determina que somente o proprietário tenha acesso ao item. A implementação está associada a `src/models/materiais.js` e aos testes em `tests/models.test.js`.
+**Descrição e decisões representadas:** a validação do upload deve garantir os formatos permitidos e o limite máximo de 50 MB. A regra de privacidade determina que somente o proprietário tenha acesso ao item. A implementação está em [`src/models/materiais.js`](../../src/models/materiais.js) (`validarUpload()`) e é verificada em [`tests/models.test.js`](../../tests/models.test.js).
 
 ---
 
@@ -373,25 +385,25 @@ stateDiagram-v2
 
 | Requisito | Elemento do modelo                                     | Como está representado                                                    | Alteração provocada no backlog/código |
 | --------- | ------------------------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------- |
-| RF-01     | `Usuario.validarCadastro()`                            | Cadastro e validação de dados no modelo de domínio e no fluxo de cadastro | `src/models/usuario.js`               |
-| RF-02     | `Usuario.podeAutenticar()`                             | Fluxo de login e autenticação                                             | `src/models/usuario.js`               |
-| RF-03     | `TokenVerificacao` / `verificarEmail()`                | Verificação de e-mail e recuperação de senha                              | `src/models/usuario.js`               |
-| RF-04     | `RespostaQuestao`                                      | Histórico e progresso de estudos                                          | `src/models/questao.js`               |
-| RF-05     | `Usuario`                                              | Dados e gerenciamento do perfil                                           | `src/models/usuario.js`               |
-| RF-06     | `Materia` / `Topico`                                   | Organização das matérias e tópicos                                        | `src/models/questao.js`               |
-| RF-07     | `Questao.filtrar()`                                    | Busca e filtros de questões                                               | `src/models/questao.js`               |
-| RF-08     | `Questao` / `Alternativa`                              | Cadastro e validação de questões                                          | `src/models/questao.js`               |
-| RF-09     | `Questao.corrigir()` / `RespostaQuestao`               | Resolução, correção e histórico                                           | `src/models/questao.js`               |
-| RF-10     | `ConversaIA` / `MensagemIA`                            | Conversação com o serviço externo de IA                                   | `src/models/conversa.js`              |
-| RF-11     | `ItemDoRepositorio` / `Pasta` / `Arquivo` / `Anotacao` | Organização e gerenciamento de materiais                                  | `src/models/materiais.js`             |
-| RN-01     | `Usuario.validarCadastro()`                            | Validação do e-mail institucional                                         | `src/models/usuario.js`               |
-| RN-02     | `Usuario.podeEditarBancoDeQuestoes()`                  | Permissão adicional do administrador                                      | `src/models/usuario.js`               |
-| RN-03     | `Usuario.status` / `TokenVerificacao`                  | Conta pendente ou ativa                                                   | `src/models/usuario.js`               |
-| RN-04     | `ItemDoRepositorio.acessivelPor()`                     | Acesso aos materiais somente pelo proprietário                            | `src/models/materiais.js`             |
-| RN-05     | `ConversaIA`                                           | Comunicação com IA realizada pelo backend                                 | `src/models/conversa.js`              |
-| RNF-02    | Fluxo de cadastro/login                                | Hash de senha e JWT tratados na camada de serviço                         | Backend                               |
-| RNF-03    | `Questao.filtrar()`                                    | Busca e filtragem de questões                                             | `src/models/questao.js`               |
-| RNF-04    | `validarUpload()`                                      | Formatos e limite de tamanho dos arquivos                                 | `src/models/materiais.js`             |
+| RF-01     | `Usuario.validarCadastro()`                            | Cadastro e validação de dados no modelo de domínio e no fluxo de cadastro | [`src/models/usuario.js`](../../src/models/usuario.js) |
+| RF-02     | `Usuario.podeAutenticar()`                             | Fluxo de login e autenticação                                             | [`src/models/usuario.js`](../../src/models/usuario.js) |
+| RF-03     | `TokenVerificacao` / `verificarEmail()`                | Verificação de e-mail e recuperação de senha                              | [`src/models/usuario.js`](../../src/models/usuario.js) |
+| RF-04     | `RespostaQuestao`                                      | Histórico e progresso de estudos                                          | [`src/models/questao.js`](../../src/models/questao.js) |
+| RF-05     | `Usuario`                                              | Dados e gerenciamento do perfil                                           | [`src/models/usuario.js`](../../src/models/usuario.js) |
+| RF-06     | `Materia` / `Topico`                                   | Organização das matérias e tópicos                                        | [`src/models/questao.js`](../../src/models/questao.js) |
+| RF-07     | `Questao.filtrar()`                                    | Busca e filtros de questões                                               | [`src/models/questao.js`](../../src/models/questao.js) |
+| RF-08     | `Questao` / `Alternativa`                              | Cadastro e validação de questões                                          | [`src/models/questao.js`](../../src/models/questao.js) |
+| RF-09     | `Questao.corrigir()` / `RespostaQuestao`               | Resolução, correção e histórico                                           | [`src/models/questao.js`](../../src/models/questao.js) |
+| RF-10     | `ConversaIA` / `MensagemIA`                            | Conversação com o serviço externo de IA                                   | [`src/models/conversa.js`](../../src/models/conversa.js) |
+| RF-11     | `ItemDoRepositorio` / `Pasta` / `Arquivo` / `Anotacao` | Organização e gerenciamento de materiais                                  | [`src/models/materiais.js`](../../src/models/materiais.js) |
+| RN-01     | `Usuario.validarCadastro()`                            | Validação do e-mail institucional                                         | [`src/models/usuario.js`](../../src/models/usuario.js) |
+| RN-02     | `Usuario.podeEditarBancoDeQuestoes()`                  | Permissão adicional do administrador                                      | [`src/models/usuario.js`](../../src/models/usuario.js) |
+| RN-03     | `Usuario.status` / `TokenVerificacao`                  | Conta pendente ou ativa                                                   | [`src/models/usuario.js`](../../src/models/usuario.js) |
+| RN-04     | `ItemDoRepositorio.acessivelPor()`                     | Acesso aos materiais somente pelo proprietário                            | [`src/models/materiais.js`](../../src/models/materiais.js) |
+| RN-05     | `ConversaIA`                                           | Comunicação com IA realizada pelo backend                                 | [`src/models/conversa.js`](../../src/models/conversa.js) |
+| RNF-02    | Fluxo de cadastro/login                                | Hash de senha e JWT tratados na camada de serviço (Supabase Auth)         | [`src/server.js`](../../src/server.js) |
+| RNF-03    | `Questao.filtrar()`                                    | Busca e filtragem de questões                                             | [`src/models/questao.js`](../../src/models/questao.js) |
+| RNF-04    | `validarUpload()`                                      | Formatos e limite de tamanho dos arquivos                                 | [`src/models/materiais.js`](../../src/models/materiais.js) |
 
 ---
 
@@ -399,21 +411,24 @@ stateDiagram-v2
 
 | Elemento modelado   | Arquivo/diretório correspondente | Observação                                                                         |
 | ------------------- | -------------------------------- | ---------------------------------------------------------------------------------- |
-| `Usuario`           | `src/models/usuario.js`          | Concentra validações de cadastro, autenticação, verificação de e-mail e permissões |
-| `TokenVerificacao`  | `src/models/usuario.js`          | Representa tokens de verificação e recuperação de senha                            |
-| `Materia`           | `src/models/questao.js`          | Representa as matérias utilizadas na organização das questões                      |
-| `Topico`            | `src/models/questao.js`          | Representa os tópicos associados às matérias                                       |
-| `Questao`           | `src/models/questao.js`          | Contém filtragem e correção das questões                                           |
-| `Alternativa`       | `src/models/questao.js`          | Representa as alternativas das questões                                            |
-| `RespostaQuestao`   | `src/models/questao.js`          | Registra respostas, acertos e histórico                                            |
-| `ConversaIA`        | `src/models/conversa.js`         | Mantém o contexto e histórico da conversa                                          |
-| `MensagemIA`        | `src/models/conversa.js`         | Representa mensagens enviadas pelo usuário ou pela IA                              |
-| `ItemDoRepositorio` | `src/models/materiais.js`        | Abstração compartilhada dos itens do repositório                                   |
-| `Pasta`             | `src/models/materiais.js`        | Organização dos materiais                                                          |
-| `Arquivo`           | `src/models/materiais.js`        | Armazenamento de arquivos enviados                                                 |
-| `Anotacao`          | `src/models/materiais.js`        | Representa anotações do usuário                                                    |
-| Validação de upload | `src/models/materiais.js`        | Implementa as regras de formato, tamanho e acesso                                  |
-| Testes dos modelos  | `tests/models.test.js`           | Verificação automatizada dos modelos e regras                                      |
+| `Usuario`           | [`src/models/usuario.js`](../../src/models/usuario.js) | Concentra validações de cadastro, autenticação, verificação de e-mail e permissões |
+| `TokenVerificacao`  | [`src/models/usuario.js`](../../src/models/usuario.js) | Representa tokens de verificação e recuperação de senha                            |
+| `Materia`           | [`src/models/questao.js`](../../src/models/questao.js) | Representa as matérias utilizadas na organização das questões                      |
+| `Topico`            | [`src/models/questao.js`](../../src/models/questao.js) | Representa os tópicos associados às matérias                                       |
+| `Questao`           | [`src/models/questao.js`](../../src/models/questao.js) | Contém filtragem e correção das questões                                           |
+| `Alternativa`       | [`src/models/questao.js`](../../src/models/questao.js) | Representa as alternativas das questões                                            |
+| `RespostaQuestao`   | [`src/models/questao.js`](../../src/models/questao.js) | Registra respostas, acertos e histórico                                            |
+| `ConversaIA`        | [`src/models/conversa.js`](../../src/models/conversa.js) | Mantém o contexto e histórico da conversa                                          |
+| `MensagemIA`        | [`src/models/conversa.js`](../../src/models/conversa.js) | Representa mensagens enviadas pelo usuário ou pela IA                              |
+| `ItemDoRepositorio` | [`src/models/materiais.js`](../../src/models/materiais.js) | Abstração compartilhada dos itens do repositório                                   |
+| `Pasta`             | [`src/models/materiais.js`](../../src/models/materiais.js) | Organização dos materiais                                                          |
+| `Arquivo`           | [`src/models/materiais.js`](../../src/models/materiais.js) | Armazenamento de arquivos enviados                                                 |
+| `Anotacao`          | [`src/models/materiais.js`](../../src/models/materiais.js) | Representa anotações do usuário                                                    |
+| Validação de upload | [`src/models/materiais.js`](../../src/models/materiais.js) | Implementa as regras de formato, tamanho e acesso                                  |
+| Testes dos modelos  | [`tests/models.test.js`](../../tests/models.test.js) | Verificação automatizada dos modelos e regras                                      |
+| Endpoints do fluxo 4.1 | [`src/server.js`](../../src/server.js) | `/api/cadastro`, `/api/login`, `/api/recuperar-senha` e `/api/salvar-nova-senha`, aplicando as regras de `Usuario` |
+| Telas do fluxo 4.1 | [`cadastro/`](../../src/public/cadastro/), [`login/`](../../src/public/login/), [`recuperar-senha/`](../../src/public/recuperar-senha/) em `src/public/` | Formulários que chamam os endpoints acima |
+| Testes do fluxo 4.1 | [`tests/auth.test.js`](../../tests/auth.test.js) | Cadastro, e-mail repetido, conta pendente, login e recuperação (Supabase simulado) |
 
 ---
 
@@ -427,7 +442,7 @@ stateDiagram-v2
 * `ConversaIA` possui contexto opcional de matéria ou questão para representar a manutenção de contexto da conversa.
 * A chave da API da IA permanece fora do modelo de domínio, na configuração do backend.
 * Foram definidas regras para upload de materiais: formatos `PDF`, `PNG`, `JPG` e `TXT`, limite de `50 MB` e acesso restrito ao proprietário.
-* Permanecem decisões a confirmar sobre os domínios de e-mail aceitos, regra de senha, SGBD e formato definitivo dos identificadores.
+* Os domínios de e-mail aceitos e a regra de senha foram confirmados pelo grupo; permanecem a definir o SGBD das demais entidades e o formato definitivo dos identificadores.
 
 ---
 
@@ -435,11 +450,11 @@ stateDiagram-v2
 
 | Item               | Situação atual                                               | Próximo passo                                      |
 | ------------------ | ------------------------------------------------------------ | -------------------------------------------------- |
-| Domínios de e-mail | Foi assumido `ufla.br` e `estudante.ufla.br`                 | Confirmar com o grupo                              |
-| Regra de senha     | Foi assumido mínimo de 8 caracteres, contendo letra e número | Confirmar requisito definitivo                     |
-| Persistência       | Modelo independente de SGBD                                  | Definir na Sprint 4                                |
+| Domínios de e-mail | Implementado com `ufla.br` e `estudante.ufla.br` como padrão, configurável pela variável `DOMINIOS_INSTITUCIONAIS` | Confirmado pelo grupo na Sprint 3 |
+| Regra de senha     | Implementado: mínimo de 8 caracteres, com letra e número (`validarSenha()`) | Confirmado pelo grupo na Sprint 3 |
+| Persistência       | Autenticação já usa o Supabase Auth (PR #15); as demais entidades ainda não são persistidas | Definir a persistência das demais entidades na Sprint 4 |
 | Identificadores    | `id` tratado como identificador opaco                        | Definir entre string/UUID e implementação do banco |
-| Endpoints          | Endpoints dos diagramas são propostos                        | Implementar conforme evolução do backend           |
+| Endpoints          | Fluxo 4.1 implementado; endpoints dos fluxos 4.2 a 4.4 ainda são propostos | Implementar conforme evolução do backend |
 
 ---
 
@@ -448,13 +463,13 @@ stateDiagram-v2
 | Sprint   | Modelo alterado                | Motivo                                                      | Evidência                 |
 | -------- | ------------------------------ | ----------------------------------------------------------- | ------------------------- |
 | Sprint 3 | Casos de uso                   | Consolidar atores e funcionalidades do sistema              | `docs/modelagem`          |
-| Sprint 3 | Classes / entidades de domínio | Definir estrutura lógica e relações entre entidades         | `src/models/`             |
-| Sprint 3 | Cadastro, verificação e login  | Evolução do fluxo responsável por liberar as telas privadas | `src/models/usuario.js`   |
-| Sprint 3 | Resolver questão               | Modelar o fluxo central de estudo e registro do histórico   | `src/models/questao.js`   |
-| Sprint 3 | Dúvida com IA                  | Representar a integração com o serviço externo              | `src/models/conversa.js`  |
-| Sprint 3 | Upload de materiais            | Formalizar validações de formato, tamanho e acesso          | `src/models/materiais.js` |
-| Sprint 3 | Estados do usuário             | Representar o ciclo de vida da conta                        | `src/models/usuario.js`   |
+| Sprint 3 | Classes / entidades de domínio | Definir estrutura lógica e relações entre entidades; `Questao.validar()` acrescentado ao implementar o RF-08 | [`src/models/`](../../src/models/) |
+| Sprint 3 | Cadastro, verificação e login  | Evolução do fluxo responsável por liberar as telas privadas; diagrama alinhado aos endpoints implementados e ao uso do Supabase Auth | [PR #15](https://github.com/pstehling/tp-eng-software/pull/15), `src/server.js`, `src/models/usuario.js` |
+| Sprint 3 | Resolver questão               | Modelar o fluxo central de estudo e registro do histórico   | [`src/models/questao.js`](../../src/models/questao.js) |
+| Sprint 3 | Dúvida com IA                  | Representar a integração com o serviço externo              | [`src/models/conversa.js`](../../src/models/conversa.js) |
+| Sprint 3 | Upload de materiais            | Formalizar validações de formato, tamanho e acesso          | [`src/models/materiais.js`](../../src/models/materiais.js) |
+| Sprint 3 | Estados do usuário             | Representar o ciclo de vida da conta                        | [`src/models/usuario.js`](../../src/models/usuario.js) |
 
-> **Observação:** links de Issues, Pull Requests e commits específicos não foram informados no material da Sprint 3. Eles devem ser adicionados posteriormente quando existirem no repositório.
+> **Evidências no GitHub:** primeira versão deste documento no commit [`e6568f4`](https://github.com/pstehling/tp-eng-software/commit/e6568f4149376cc1b806b544cad4f6cb82fb204e); implementação do fluxo 4.1 no commit [`aeaabd1`](https://github.com/pstehling/tp-eng-software/commit/aeaabd13d4cee5bbfd09e58ad7c8888ca1a856ca) ([PR #15](https://github.com/pstehling/tp-eng-software/pull/15)); modelos de domínio, testes e imagens dos diagramas na branch `sprint-03` (ver [`docs/sprints/sprint-03.md`](../sprints/sprint-03.md)).
 
 ---

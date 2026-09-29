@@ -103,3 +103,4 @@ O que amarra a proposta é a integração: a mesma matéria organiza as questõe
 | Sprint 1 | Versão inicial do documento de visão do produto | Definição do problema, público, escopo e objetivos do projeto | #01 |
 | Sprint 1 | Chat com IA incorporado à tela de questão em vez de tela isolada | Evitar duplicação de implementação e aproveitar o contexto da questão para respostas mais úteis | #08 / #09 |
 | Sprint 1 | Nome da solução alterado de EstUFLA para While(estuda) | Decisão do grupo por um nome com identidade ligada ao domínio de computação | #01 |
+| Sprint 3 | Revisão após a modelagem: nenhuma mudança de escopo. O e-mail institucional passou a significar os domínios `@ufla.br` e `@estudante.ufla.br`, e a autenticação passou a usar o Supabase Auth | A modelagem apenas detalhou regras já previstas (RN-01, RNF-02); a escolha do Supabase é tecnológica e não altera o que o produto entrega | `docs/modelagem/modelagem.md`, PR #15 |

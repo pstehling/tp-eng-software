@@ -1,0 +1,40 @@
+sequenceDiagram
+    actor E as Estudante
+    participant UI as Frontend (cadastro/ e login/)
+    participant API as Backend (server.js)
+    participant M as Usuario (models/usuario.js)
+    participant AUTH as Supabase Auth
+
+    E->>UI: Preenche nome, e-mail e senha
+    UI->>API: POST /api/cadastro
+    API->>M: Usuario.validarCadastro()
+
+    alt Dados inválidos ou e-mail não institucional
+        M-->>API: erros[]
+        API-->>UI: 400 + mensagens
+    else Dados válidos
+        API->>AUTH: signUp(email, senha)
+        alt E-mail já cadastrado
+            AUTH-->>API: erro "already registered"
+            API-->>UI: 409 e-mail já cadastrado
+        else Conta criada como PENDENTE_VERIFICACAO
+            AUTH->>AUTH: Gera o hash da senha
+            AUTH-->>E: E-mail com link de verificação
+            API-->>UI: 201 verifique seu e-mail
+        end
+    end
+
+    E->>AUTH: Abre o link de verificação
+    AUTH->>AUTH: Token válido, conta passa a ATIVO
+
+    E->>UI: E-mail + senha
+    UI->>API: POST /api/login
+    API->>AUTH: signInWithPassword()
+
+    alt Conta ainda pendente
+        API-->>UI: 403 confirme seu e-mail
+    else Credenciais inválidas
+        API-->>UI: 401 mensagem genérica
+    else Autenticação válida
+        API-->>UI: 200 + redirecionamento (sessão JWT gerida pelo Supabase)
+    end

@@ -1,0 +1,59 @@
+# Execução dos testes automatizados — Sprint 3
+# Comando: cd src && npm test (node --test --test-reporter=spec)
+# Data: 28/09/2026 22:35 | Node v22.22.2
+
+▶ Fluxo de autenticação
+  ✔ cadastro com e-mail não institucional é barrado antes do Supabase (RN-01) (70.418878ms)
+  ✔ cadastro válido cria a conta pendente de verificação (201) (5.817823ms)
+  ✔ e-mail já cadastrado retorna 409 (US-02, critério 2) (3.896118ms)
+  ✔ login de conta não verificada é bloqueado (RN-03) (3.915607ms)
+  ✔ credenciais incorretas retornam mensagem genérica (US-01, critério 2) (3.992016ms)
+  ✔ login válido redireciona o usuário (US-01, critério 1) (3.514311ms)
+  ✔ recuperação de senha envia link para a página correta (RF-03) (7.053989ms)
+  ✔ nova senha fora da regra é rejeitada antes do Supabase (2.635685ms)
+✔ Fluxo de autenticação (105.560347ms)
+▶ Usuario — RF-01 / RN-01 (validarCadastro)
+  ✔ aceita cadastro com e-mail institucional e senha válida (2.396387ms)
+  ✔ rejeita e-mail fora do domínio institucional (RN-01) (0.400973ms)
+  ✔ rejeita senha curta ou sem número (0.353495ms)
+  ✔ domínios aceitos podem ser configurados por variável de ambiente (0.321865ms)
+✔ Usuario — RF-01 / RN-01 (validarCadastro) (4.498419ms)
+▶ Usuario / TokenVerificacao — estados da conta (RF-02, RF-03, RN-03)
+  ✔ nova conta começa PENDENTE_VERIFICACAO e não pode autenticar (0.39888ms)
+  ✔ token válido muda a conta para ATIVO e libera o login (0.30808ms)
+  ✔ token expirado não ativa a conta (transição PENDENTE -> PENDENTE) (0.400522ms)
+  ✔ token de recuperação de senha não serve para verificar e-mail (0.262282ms)
+✔ Usuario / TokenVerificacao — estados da conta (RF-02, RF-03, RN-03) (1.65881ms)
+▶ Usuario — permissões (RN-02)
+  ✔ somente ADMIN pode editar o banco de questões (0.229324ms)
+✔ Usuario — permissões (RN-02) (0.323944ms)
+▶ Questao — RF-07, RF-08, RF-09 e progresso (RF-04)
+  ✔ filtra combinando matéria e dificuldade (US-06, critério 1) (1.4395ms)
+  ✔ busca textual no enunciado ignora maiúsculas (0.414916ms)
+  ✔ filtro sem correspondência retorna lista vazia (US-06, critério 2) (0.125269ms)
+  ✔ corrigir gera RespostaQuestao correta ou incorreta (0.231109ms)
+  ✔ corrigir rejeita alternativa de outra questão (0.158219ms)
+  ✔ validar impede questão sem gabarito válido ou sem matéria (RF-08) (0.196301ms)
+  ✔ progresso calcula percentual de acerto a partir do histórico (0.197725ms)
+✔ Questao — RF-07, RF-08, RF-09 e progresso (RF-04) (2.975093ms)
+▶ ConversaIA — RF-10
+  ✔ mantém o contexto da questão e o histórico da conversa (0.314142ms)
+  ✔ limita o histórico enviado à IA e rejeita mensagem vazia (0.286362ms)
+✔ ConversaIA — RF-10 (0.684523ms)
+▶ Materiais — RF-11, RNF-04, RN-04
+  ✔ aceita PDF dentro do limite na pasta do próprio usuário (0.18031ms)
+  ✔ aceita exatamente 50 MB e rejeita acima disso (US-10, critério 2) (0.07887ms)
+  ✔ rejeita formato não permitido (0.054745ms)
+  ✔ nega upload na pasta de outro usuário (RN-04) (0.053179ms)
+  ✔ itens do repositório só são acessíveis pelo dono (0.198397ms)
+  ✔ ItemDoRepositorio é abstrata (0.098673ms)
+✔ Materiais — RF-11, RNF-04, RN-04 (0.812448ms)
+✔ GET /api/status responde com status ok (158.561121ms)
+ℹ tests 33
+ℹ suites 7
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 671.939074
