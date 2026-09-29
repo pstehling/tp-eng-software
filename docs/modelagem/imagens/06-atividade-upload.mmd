@@ -1,0 +1,13 @@
+flowchart TD
+    A["Usuário seleciona arquivo"] --> B{"Formato permitido?"}
+
+    B -->|"PDF, PNG, JPG ou TXT"| C{"Tamanho <= 50 MB?"}
+    B -->|"Não"| D["Rejeitar upload"]
+
+    C -->|"Sim"| E{"Usuário é o proprietário?"}
+    C -->|"Não"| D
+
+    E -->|"Sim"| F["Armazenar arquivo"]
+    E -->|"Não"| G["Negar acesso"]
+
+    F --> H["Disponibilizar item no repositório"]

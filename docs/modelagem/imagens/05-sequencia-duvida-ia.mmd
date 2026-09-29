@@ -1,0 +1,23 @@
+sequenceDiagram
+    actor E as Estudante
+    participant UI as Frontend
+    participant API as Backend
+    participant C as ConversaIA
+    participant IA as Serviço de IA
+
+    E->>UI: Solicita ajuda da IA na questão
+    UI->>API: POST /api/conversas {questaoId}
+    API->>C: Cria ConversaIA(contexto={questaoId})
+
+    E->>UI: Digita a dúvida
+    UI->>API: POST /api/conversas/:id/mensagens
+    API->>C: adicionar(USUARIO, texto)
+    API->>IA: Enunciado + historicoParaEnvio()
+
+    alt IA responde
+        IA-->>API: Resposta
+        API->>C: adicionar(IA, resposta)
+        API-->>UI: Resposta
+    else Serviço indisponível
+        API-->>UI: Erro amigável + reenviar
+    end

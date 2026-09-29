@@ -1,0 +1,8 @@
+stateDiagram-v2
+    [*] --> PENDENTE_VERIFICACAO : Cadastro válido (RF-01)
+
+    PENDENTE_VERIFICACAO --> ATIVO : Verificar e-mail com token válido (RF-03)
+
+    PENDENTE_VERIFICACAO --> PENDENTE_VERIFICACAO : Token expirado / reenvio
+
+    ATIVO --> ATIVO : Login / logout / recuperar senha
