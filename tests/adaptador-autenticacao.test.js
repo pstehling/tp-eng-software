@@ -15,11 +15,11 @@ const {
 const { AdaptadorSupabaseAuth } = require(path.join(src, 'servicos', 'adaptador-supabase-auth.js'));
 const app = require(path.join(src, 'server.js'));
 
-// Cliente do Supabase falso: registra as chamadas e devolve o erro configurado por método.
-function supabaseFalso(erros = {}, chamadas = []) {
+// Cliente do Supabase falso: registra as chamadas e devolve o erro (ou os dados) configurado por método.
+function supabaseFalso(erros = {}, chamadas = [], dados = {}) {
   const responder = (metodo) => async (...args) => {
     chamadas.push([metodo, ...args]);
-    return { data: {}, error: erros[metodo] || null };
+    return { data: dados[metodo] || {}, error: erros[metodo] || null };
   };
   return {
     auth: {
@@ -61,6 +61,17 @@ describe('AdaptadorSupabaseAuth — tradução da API do Supabase', () => {
       const resultado = await servico.cadastrar({ nome: 'Ana', email: 'a@ufla.br', senha: 'x' });
       assert.equal(resultado.motivo, MOTIVOS.EMAIL_JA_CADASTRADO, code);
     }
+  });
+
+  test('e-mail já confirmado é reconhecido pelo usuário fictício sem identidades (Confirm email ativo)', async () => {
+    const usuarioFicticio = { user: { id: 'x', identities: [] }, session: null };
+    const servico = new AdaptadorSupabaseAuth(supabaseFalso({}, [], { signUp: usuarioFicticio }));
+    const resultado = await servico.cadastrar({ nome: 'Ana', email: 'a@ufla.br', senha: 'x' });
+    assert.equal(resultado.motivo, MOTIVOS.EMAIL_JA_CADASTRADO);
+
+    const usuarioNovo = { user: { id: 'y', identities: [{ provider: 'email' }] }, session: null };
+    const outro = new AdaptadorSupabaseAuth(supabaseFalso({}, [], { signUp: usuarioNovo }));
+    assert.deepEqual(await outro.cadastrar({ nome: 'Bia', email: 'b@ufla.br', senha: 'x' }), { sucesso: true });
   });
 
   test('conta não confirmada é reconhecida pelo código do erro (RN-03)', async () => {

@@ -150,7 +150,7 @@ A rota decide **o que responder** (status e mensagem em português); o adaptador
 | Adaptee | cliente `@supabase/supabase-js` (`createClient`), criado em `obterSupabase()` | [`src/server.js#L20`](../../src/server.js#L20) |
 | Client — ponto de criação | `obterServicoAutenticacao()` | [`src/server.js#L32`](../../src/server.js#L32) |
 | Client — rotas | `/api/cadastro`, `/api/login`, `/api/recuperar-senha`, `/api/salvar-nova-senha` | [`#L56`](../../src/server.js#L56), [`#L92`](../../src/server.js#L92), [`#L118`](../../src/server.js#L118), [`#L143`](../../src/server.js#L143) |
-| Teste do adaptador | 7 testes: tradução de parâmetros e de `error.code`, mesmo com mensagem alterada | [`tests/adaptador-autenticacao.test.js`](../../tests/adaptador-autenticacao.test.js) |
+| Teste do adaptador | 8 testes: tradução de parâmetros e de `error.code`, mesmo com mensagem alterada | [`tests/adaptador-autenticacao.test.js`](../../tests/adaptador-autenticacao.test.js) |
 | Teste do cliente com outra implementação | `ServicoAutenticacaoEmMemoria`: as rotas funcionam sem Supabase algum | [`tests/adaptador-autenticacao.test.js`](../../tests/adaptador-autenticacao.test.js) |
 | Teste de não regressão | `tests/auth.test.js` **sem nenhuma alteração** continua passando — o Supabase falso agora é chamado através do adaptador | [`tests/auth.test.js`](../../tests/auth.test.js) |
 
@@ -161,7 +161,7 @@ Links fixados na tag (funcionam depois que a tag `sprint-05` for enviada): [`src
 | Aspecto | Antes (`8e34340`) | Depois (`sprint-05`) |
 |---|---|---|
 | Quem conhece o SDK do Supabase | As 4 rotas de `server.js` (5 chamadas `supabase.auth.*`) | Somente `AdaptadorSupabaseAuth` |
-| Como "e-mail já cadastrado" é detectado | `/already registered/i.test(error.message)` | `error.code` ∈ {`user_already_exists`, `email_exists`}; a mensagem só é usada como alternativa quando não há código |
+| Como "e-mail já cadastrado" é detectado | `/already registered/i.test(error.message)` — **nunca disparava** com a confirmação de e-mail ativa (ver seção 6.1) | Usuário fictício sem identidades (`data.user.identities` vazio) **ou** `error.code` ∈ {`user_already_exists`, `email_exists`}; a mensagem só é usada como alternativa quando não há código |
 | Como "conta não verificada" (RN-03) é detectada | `error.message === 'Email not confirmed'` | `error.code === 'email_not_confirmed'`, com a mesma alternativa |
 | O que a rota recebe | Objeto de erro do Supabase | `{ sucesso, motivo, detalhe }` com `motivo` em `MOTIVOS_FALHA_AUTENTICACAO` (mesmo formato de `validarUpload`) |
 | Como testar uma rota | Imitar o SDK do Supabase e suas frases | Injetar qualquer implementação de `ServicoAutenticacao` em `app.locals.servicoAutenticacao` |
@@ -185,14 +185,14 @@ if (!resultado.sucesso) {
 ```bash
 cd src
 npm install
-npm test     # 44 testes: os 33 anteriores (inalterados) + 11 do padrão
+npm test     # 45 testes: os 33 anteriores (inalterados) + 12 do padrão
 npm start    # http://localhost:3000 — cadastro, login e recuperação de senha
 ```
 
 | Evidência | Resultado |
 |---|---|
 | [`docs/evidencias/sprint-05-testes-antes.txt`](../evidencias/sprint-05-testes-antes.txt) | 33 testes, 33 aprovados — código anterior à mudança |
-| [`docs/evidencias/sprint-05-testes-depois.txt`](../evidencias/sprint-05-testes-depois.txt) | 44 testes, 44 aprovados — mesmos 33 testes sem alteração + 11 novos |
+| [`docs/evidencias/sprint-05-testes-depois.txt`](../evidencias/sprint-05-testes-depois.txt) | 45 testes, 45 aprovados — mesmos 33 testes sem alteração + 12 novos |
 
 ---
 
@@ -218,6 +218,15 @@ npm start    # http://localhost:3000 — cadastro, login e recuperação de senh
 - **Rotas testáveis sem o Supabase.** `ServicoAutenticacaoEmMemoria` (nos testes) implementa a interface e exercita cadastro, e-mail repetido, conta pendente, login, senha errada e redefinição de senha pelas rotas reais.
 - **Comportamento preservado.** Os 33 testes anteriores, incluindo `tests/auth.test.js` sem nenhuma alteração, continuam passando; nenhum arquivo de `src/public/` foi alterado.
 - **Coesão das rotas.** Cada rota agora só valida a entrada, chama a interface e escolhe a resposta HTTP.
+
+### 6.1 Defeito encontrado ao validar com o Supabase real
+
+No teste manual com o Supabase real, cadastrar um e-mail **já confirmado** respondia `201 Cadastro realizado! Verifique seu e-mail`, e não `409 Este e-mail já está cadastrado`, violando o critério 2 da US-02.
+
+- **Causa:** com a opção *Confirm email* ativa no projeto, o Supabase não devolve erro nesse caso. Ele devolve um usuário fictício com `identities: []`, para não revelar quais e-mails existem. O erro `User already registered` só acontece com a confirmação desativada (documentação de `signUp` em `@supabase/auth-js`, `GoTrueClient.d.ts`).
+- **Não foi introduzido pelo padrão:** o código anterior ([`server.js` em `8e34340`, linhas 59–72](https://github.com/pstehling/tp-eng-software/blob/8e343400d24fbd62b958910466039cedefdacfa2/src/server.js#L59-L72)) só olhava `error` e tinha o mesmo defeito. Os testes antigos não o pegavam porque o Supabase falso devolvia um erro que o Supabase real, com essa configuração, não devolve.
+- **Correção:** a função `usuarioFicticio()` em `AdaptadorSupabaseAuth.cadastrar()` traduz esse caso para `EMAIL_JA_CADASTRADO`. **Nenhuma rota, tela ou teste anterior precisou mudar**, o que é justamente o benefício esperado do Adapter: o conhecimento sobre o comportamento do fornecedor fica em um lugar só. Um teste novo cobre o caso (45/45).
+- **Trade-off:** o Supabase esconde essa informação para dificultar a descoberta de e-mails cadastrados. Ao responder `409`, a aplicação volta a revelá-la, mas isso é o que a US-02 exige.
 
 **Custos:**
 

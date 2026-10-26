@@ -13,7 +13,7 @@
 
 **Objetivo planejado:** identificar no código um problema de projeto recorrente e aplicar um padrão pertinente, sem alterar o comportamento já entregue.
 
-**Resultado efetivamente alcançado:** o padrão **Adapter** (PP-01) foi aplicado ao fluxo de autenticação. As rotas de `src/server.js` deixaram de chamar o Supabase diretamente e de comparar o texto em inglês das mensagens de erro; passaram a usar a interface `ServicoAutenticacao`, implementada por `AdaptadorSupabaseAuth`. Os 33 testes anteriores continuam passando sem alteração e 11 novos foram criados (44/44).
+**Resultado efetivamente alcançado:** o padrão **Adapter** (PP-01) foi aplicado ao fluxo de autenticação. As rotas de `src/server.js` deixaram de chamar o Supabase diretamente e de comparar o texto em inglês das mensagens de erro; passaram a usar a interface `ServicoAutenticacao`, implementada por `AdaptadorSupabaseAuth`. Os 33 testes anteriores continuam passando sem alteração e 12 novos foram criados (45/45).
 
 ## 3. Checklist do artefato central — 0,75 ponto
 
@@ -55,13 +55,13 @@ O comportamento visível ao usuário não muda (mesmos status HTTP e mensagens; 
 ```bash
 cd src
 npm install
-npm test     # 44 testes: 33 anteriores (inalterados) + 11 do padrão
+npm test     # 45 testes: 33 anteriores (inalterados) + 12 do padrão
 npm start    # http://localhost:3000 — cadastro, login e recuperação de senha (requer src/.env)
 ```
 
 | Requisito/Issue | Código ou protótipo | Evidência de execução |
 |---|---|---|
-| RF-01, RF-02, RF-03, RN-03 / `[#XX — T-05]` | [`src/servicos/`](https://github.com/pstehling/tp-eng-software/tree/sprint-05/src/servicos), [`src/server.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/server.js) | [antes: 33/33](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-antes.txt), [depois: 44/44](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-depois.txt) |
+| RF-01, RF-02, RF-03, RN-03 / `[#XX — T-05]` | [`src/servicos/`](https://github.com/pstehling/tp-eng-software/tree/sprint-05/src/servicos), [`src/server.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/server.js) | [antes: 33/33](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-antes.txt), [depois: 45/45](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-depois.txt) |
 
 ## 5. Scrum e gestão do trabalho — 0,50 ponto
 
@@ -87,7 +87,7 @@ npm start    # http://localhost:3000 — cadastro, login e recuperação de senh
 | Pull Request | `[link]` | Revisão e integração da branch `sprint-05` |
 | Commit | `[link]` | Refatoração com o padrão Adapter |
 | Código/arquivo | [`src/servicos/`](https://github.com/pstehling/tp-eng-software/tree/sprint-05/src/servicos) · [antes (`server.js` em `8e34340`)](https://github.com/pstehling/tp-eng-software/blob/8e343400d24fbd62b958910466039cedefdacfa2/src/server.js#L59) | Participantes do padrão e código anterior à mudança |
-| Teste/captura/relatório | [`tests/adaptador-autenticacao.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/adaptador-autenticacao.test.js), [saída antes](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-antes.txt), [saída depois](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-depois.txt) | Comportamento preservado (33/33 → 44/44) |
+| Teste/captura/relatório | [`tests/adaptador-autenticacao.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/adaptador-autenticacao.test.js), [saída antes](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-antes.txt), [saída depois](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-depois.txt) | Comportamento preservado (33/33 → 45/45) |
 
 ### Rastreabilidade resumida
 
@@ -103,7 +103,7 @@ npm start    # http://localhost:3000 — cadastro, login e recuperação de senh
 - **Critérios atendidos:** `[PREENCHER]`
 - **Itens não concluídos:** T-06 (débito técnico registrado); regeneração da imagem `03-sequencia-cadastro-login.png`; teste ponta a ponta com o Supabase real `[PREENCHER — confirmar se foi feito]`.
 - **Motivo das pendências:** `[PREENCHER]`
-- **Feedback recebido e ajustes:** `[PREENCHER]`
+- **Feedback recebido e ajustes:** no teste manual com o Supabase real, o cadastro de e-mail já confirmado respondia 201 em vez de 409 (defeito anterior à sprint). Corrigido no adaptador, com teste novo — ver seção 6.1 de `docs/padroes/padroes-de-projeto.md`. `[PREENCHER — demais feedbacks]`
 
 ## 8. Retrospectiva e próxima sprint
 

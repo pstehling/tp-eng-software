@@ -19,6 +19,14 @@ function emailJaCadastrado(erro) {
   return CODIGOS_EMAIL_JA_CADASTRADO.includes(erro.code) || /already registered/i.test(erro.message);
 }
 
+// Com "Confirm email" ativo, o Supabase não devolve erro para e-mail já confirmado:
+// devolve um usuário fictício sem identidades (documentação de signUp em
+// @supabase/auth-js, GoTrueClient.d.ts). O erro "User already registered" só ocorre
+// com a confirmação desativada, e é tratado em emailJaCadastrado().
+function usuarioFicticio(dados) {
+  return Array.isArray(dados?.user?.identities) && dados.user.identities.length === 0;
+}
+
 function emailNaoConfirmado(erro) {
   return erro.code === CODIGO_EMAIL_NAO_CONFIRMADO || erro.message === 'Email not confirmed';
 }
@@ -32,7 +40,7 @@ class AdaptadorSupabaseAuth extends ServicoAutenticacao {
   async cadastrar({ nome, email, senha, urlConfirmacao }) {
     // O Supabase gera o hash da senha (RNF-02), cria a conta pendente de verificação
     // e envia o link de confirmação por e-mail (RF-03).
-    const { error } = await this.auth.signUp({
+    const { data, error } = await this.auth.signUp({
       email,
       password: senha,
       options: {
@@ -40,7 +48,7 @@ class AdaptadorSupabaseAuth extends ServicoAutenticacao {
         emailRedirectTo: urlConfirmacao,
       },
     });
-    if (!error) return sucesso();
+    if (!error) return usuarioFicticio(data) ? falha(MOTIVOS.EMAIL_JA_CADASTRADO) : sucesso();
     if (emailJaCadastrado(error)) return falha(MOTIVOS.EMAIL_JA_CADASTRADO);
     return falha(MOTIVOS.ERRO_SERVICO, error.message);
   }
