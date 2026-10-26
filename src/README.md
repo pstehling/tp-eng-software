@@ -54,6 +54,9 @@ src/
 │   ├── conversa.js        # ConversaIA, MensagemIA — RF-10, RN-05
 │   ├── materiais.js       # ItemDoRepositorio, Pasta, Arquivo, Anotacao, validarUpload — RF-11, RNF-04, RN-04
 │   └── index.js
+├── servicos/              # padrão Adapter (ver docs/padroes/padroes-de-projeto.md, PP-01)
+│   ├── servico-autenticacao.js     # ServicoAutenticacao: interface usada pelas rotas — RF-01..RF-03, RN-03
+│   └── adaptador-supabase-auth.js  # AdaptadorSupabaseAuth: único arquivo que conhece o Supabase Auth
 ├── package.json
 └── public/                # frontend estático servido pelo Express
     ├── index.html

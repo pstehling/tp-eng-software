@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 const { Usuario, validarSenha } = require('./models');
+const { MOTIVOS_FALHA_AUTENTICACAO } = require('./servicos/servico-autenticacao');
+const { AdaptadorSupabaseAuth } = require('./servicos/adaptador-supabase-auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +24,15 @@ function obterSupabase() {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
   supabaseCliente = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   return supabaseCliente;
+}
+
+// Padrão Adapter (docs/padroes/padroes-de-projeto.md, PP-01): as rotas dependem apenas
+// da interface ServicoAutenticacao. Qualquer implementação dela pode ser injetada em
+// app.locals.servicoAutenticacao; sem injeção, o Supabase é adaptado a essa interface.
+function obterServicoAutenticacao() {
+  if (app.locals.servicoAutenticacao) return app.locals.servicoAutenticacao;
+  const supabase = obterSupabase();
+  return supabase ? new AdaptadorSupabaseAuth(supabase) : null;
 }
 
 function servicoIndisponivel(res) {
@@ -51,25 +62,22 @@ app.post('/api/cadastro', async (req, res) => {
     return res.status(400).json({ sucesso: false, erro: erros.join(' '), erros });
   }
 
-  const supabase = obterSupabase();
-  if (!supabase) return servicoIndisponivel(res);
+  const servicoAuth = obterServicoAutenticacao();
+  if (!servicoAuth) return servicoIndisponivel(res);
 
-  // 2. O Supabase Auth gera o hash da senha (RNF-02), cria a conta como pendente
-  //    de verificação e envia o link de confirmação por e-mail (RF-03)
-  const { error } = await supabase.auth.signUp({
+  // 2. Cria a conta pendente de verificação e envia o link de confirmação (RF-03)
+  const resultado = await servicoAuth.cadastrar({
+    nome,
     email,
-    password: senha,
-    options: {
-      data: { display_name: nome, nome },
-      emailRedirectTo: `${APP_URL}/login/index.html`,
-    },
+    senha,
+    urlConfirmacao: `${APP_URL}/login/index.html`,
   });
 
-  if (error) {
-    if (/already registered/i.test(error.message)) {
+  if (!resultado.sucesso) {
+    if (resultado.motivo === MOTIVOS_FALHA_AUTENTICACAO.EMAIL_JA_CADASTRADO) {
       return res.status(409).json({ sucesso: false, erro: 'Este e-mail já está cadastrado.' });
     }
-    return res.status(400).json({ sucesso: false, erro: error.message });
+    return res.status(400).json({ sucesso: false, erro: resultado.detalhe });
   }
 
   res.status(201).json({
@@ -84,14 +92,14 @@ app.post('/api/cadastro', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   const { email, senha } = req.body || {};
 
-  const supabase = obterSupabase();
-  if (!supabase) return servicoIndisponivel(res);
+  const servicoAuth = obterServicoAutenticacao();
+  if (!servicoAuth) return servicoIndisponivel(res);
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
+  const resultado = await servicoAuth.entrar({ email, senha });
 
-  if (error) {
+  if (!resultado.sucesso) {
     // RN-03: conta ainda em PENDENTE_VERIFICACAO não acessa as áreas restritas
-    if (error.message === 'Email not confirmed') {
+    if (resultado.motivo === MOTIVOS_FALHA_AUTENTICACAO.EMAIL_NAO_CONFIRMADO) {
       return res.status(403).json({
         sucesso: false,
         erro: 'Conta não verificada. Por favor, confirme seu e-mail antes de acessar.',
@@ -110,16 +118,17 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/recuperar-senha', async (req, res) => {
   const { email } = req.body || {};
 
-  const supabase = obterSupabase();
-  if (!supabase) return servicoIndisponivel(res);
+  const servicoAuth = obterServicoAutenticacao();
+  if (!servicoAuth) return servicoIndisponivel(res);
 
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+  const resultado = await servicoAuth.solicitarRecuperacaoSenha({
+    email,
     // página que recebe o token do e-mail e exibe o formulário de nova senha
-    redirectTo: `${APP_URL}/recuperar-senha/index.html`,
+    urlRedefinicao: `${APP_URL}/recuperar-senha/index.html`,
   });
 
-  if (error) {
-    return res.status(400).json({ sucesso: false, erro: error.message });
+  if (!resultado.sucesso) {
+    return res.status(400).json({ sucesso: false, erro: resultado.detalhe });
   }
 
   res.status(200).json({
@@ -139,24 +148,20 @@ app.post('/api/salvar-nova-senha', async (req, res) => {
     return res.status(400).json({ sucesso: false, erro: errosSenha.join(' '), erros: errosSenha });
   }
 
-  const supabase = obterSupabase();
-  if (!supabase) return servicoIndisponivel(res);
+  const servicoAuth = obterServicoAutenticacao();
+  if (!servicoAuth) return servicoIndisponivel(res);
 
-  // 1. Assume temporariamente a sessão do usuário usando o token do link
-  const { error: sessionError } = await supabase.auth.setSession({
-    access_token: token_acesso,
-    refresh_token: refresh_token || token_acesso,
+  const resultado = await servicoAuth.redefinirSenha({
+    tokenAcesso: token_acesso,
+    tokenRenovacao: refresh_token,
+    novaSenha: nova_senha,
   });
 
-  if (sessionError) {
-    return res.status(401).json({ sucesso: false, erro: 'Token inválido ou expirado.' });
-  }
-
-  // 2. Atualiza a senha do usuário autenticado
-  const { error: updateError } = await supabase.auth.updateUser({ password: nova_senha });
-
-  if (updateError) {
-    return res.status(400).json({ sucesso: false, erro: updateError.message });
+  if (!resultado.sucesso) {
+    if (resultado.motivo === MOTIVOS_FALHA_AUTENTICACAO.TOKEN_INVALIDO) {
+      return res.status(401).json({ sucesso: false, erro: 'Token inválido ou expirado.' });
+    }
+    return res.status(400).json({ sucesso: false, erro: resultado.detalhe });
   }
 
   res.status(200).json({ sucesso: true, mensagem: 'Senha atualizada com sucesso!' });
