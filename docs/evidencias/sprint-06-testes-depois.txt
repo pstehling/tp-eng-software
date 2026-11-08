@@ -1,0 +1,96 @@
+
+> While(estuda)@0.1.0 test
+> node --test ../tests/*.test.js
+
+▶ AdaptadorSupabaseAuth — tradução da API do Supabase
+  ✔ ServicoAutenticacao é abstrata (1.5694ms)
+  ✔ cadastrar() repassa os dados no formato do Supabase (1.4459ms)
+  ✔ e-mail repetido é reconhecido pelo código do erro, mesmo com outra mensagem (0.4035ms)
+  ✔ e-mail já confirmado é reconhecido pelo usuário fictício sem identidades (Confirm email ativo) (0.3071ms)
+  ✔ conta não confirmada é reconhecida pelo código do erro (RN-03) (0.3877ms)
+  ✔ demais erros de login viram CREDENCIAIS_INVALIDAS (0.192ms)
+  ✔ redefinirSenha() com token inválido não tenta atualizar a senha (0.3347ms)
+  ✔ redefinirSenha() usa o token de acesso quando não há token de renovação (0.4013ms)
+✔ AdaptadorSupabaseAuth — tradução da API do Supabase (6.8749ms)
+▶ Rotas de autenticação com outra implementação da interface (sem Supabase)
+  ✔ cadastro e e-mail repetido (RF-01, US-02) (187.5353ms)
+  ✔ login antes e depois da confirmação do e-mail (RF-02, RN-03) (21.4847ms)
+  ✔ senha errada recebe mensagem genérica (US-01, critério 2) (12.9682ms)
+  ✔ redefinição de senha com token inválido e válido (RF-03) (16.4472ms)
+✔ Rotas de autenticação com outra implementação da interface (sem Supabase) (246.8966ms)
+▶ Comunicação entre frontend, API e serviço externo (app montado)
+  ✔ o mesmo servidor entrega as páginas do frontend (DA-02) (136.1432ms)
+  ✔ /api/status informa se o serviço de autenticação está configurado, sem expor chaves (18.0014ms)
+  ✔ rota inexistente da API responde 404 em JSON (DA-05) (8.302ms)
+  ✔ erro inesperado no serviço vira 500 genérico e o servidor continua no ar (DA-05) (58.9838ms)
+✔ Comunicação entre frontend, API e serviço externo (app montado) (230.9458ms)
+▶ Camada de rotas independente da montagem da aplicação
+  ✔ as rotas de autenticação funcionam em outro app Express com o serviço passado por parâmetro (39.9397ms)
+  ✔ sem serviço configurado, as rotas respondem 503 (17.9106ms)
+✔ Camada de rotas independente da montagem da aplicação (58.6642ms)
+▶ Fluxo de autenticação
+  ✔ cadastro com e-mail não institucional é barrado antes do Supabase (RN-01) (169.0103ms)
+  ✔ cadastro válido cria a conta pendente de verificação (201) (10.8926ms)
+  ✔ e-mail já cadastrado retorna 409 (US-02, critério 2) (13.0323ms)
+  ✔ login de conta não verificada é bloqueado (RN-03) (14.5503ms)
+  ✔ credenciais incorretas retornam mensagem genérica (US-01, critério 2) (15.4204ms)
+  ✔ login válido redireciona o usuário (US-01, critério 1) (10.1203ms)
+  ✔ recuperação de senha envia link para a página correta (RF-03) (9.094ms)
+  ✔ nova senha fora da regra é rejeitada antes do Supabase (7.9ms)
+✔ Fluxo de autenticação (259.1526ms)
+▶ Usuario — RF-01 / RN-01 (validarCadastro)
+  ✔ aceita cadastro com e-mail institucional e senha válida (4.2382ms)
+  ✔ rejeita e-mail fora do domínio institucional (RN-01) (0.9657ms)
+  ✔ rejeita senha curta ou sem número (0.8283ms)
+  ✔ domínios aceitos podem ser configurados por variável de ambiente (0.8468ms)
+✔ Usuario — RF-01 / RN-01 (validarCadastro) (9.2838ms)
+▶ Usuario / TokenVerificacao — estados da conta (RF-02, RF-03, RN-03)
+  ✔ nova conta começa PENDENTE_VERIFICACAO e não pode autenticar (0.7909ms)
+  ✔ token válido muda a conta para ATIVO e libera o login (0.7019ms)
+  ✔ token expirado não ativa a conta (transição PENDENTE -> PENDENTE) (1.4693ms)
+  ✔ token de recuperação de senha não serve para verificar e-mail (0.4991ms)
+✔ Usuario / TokenVerificacao — estados da conta (RF-02, RF-03, RN-03) (4.2159ms)
+▶ Usuario — permissões (RN-02)
+  ✔ somente ADMIN pode editar o banco de questões (2.3671ms)
+✔ Usuario — permissões (RN-02) (2.7241ms)
+▶ Questao — RF-07, RF-08, RF-09 e progresso (RF-04)
+  ✔ filtra combinando matéria e dificuldade (US-06, critério 1) (1.104ms)
+  ✔ busca textual no enunciado ignora maiúsculas (0.3515ms)
+  ✔ filtro sem correspondência retorna lista vazia (US-06, critério 2) (0.2411ms)
+  ✔ corrigir gera RespostaQuestao correta ou incorreta (0.4598ms)
+  ✔ corrigir rejeita alternativa de outra questão (0.4181ms)
+  ✔ validar impede questão sem gabarito válido ou sem matéria (RF-08) (0.5675ms)
+  ✔ progresso calcula percentual de acerto a partir do histórico (0.5025ms)
+✔ Questao — RF-07, RF-08, RF-09 e progresso (RF-04) (4.2242ms)
+▶ ConversaIA — RF-10
+  ✔ mantém o contexto da questão e o histórico da conversa (0.848ms)
+  ✔ limita o histórico enviado à IA e rejeita mensagem vazia (0.376ms)
+✔ ConversaIA — RF-10 (1.3911ms)
+▶ Materiais — RF-11, RNF-04, RN-04
+  ✔ aceita PDF dentro do limite na pasta do próprio usuário (0.3269ms)
+  ✔ aceita exatamente 50 MB e rejeita acima disso (US-10, critério 2) (0.1913ms)
+  ✔ rejeita formato não permitido (0.1755ms)
+  ✔ nega upload na pasta de outro usuário (RN-04) (0.0956ms)
+  ✔ itens do repositório só são acessíveis pelo dono (0.2146ms)
+  ✔ ItemDoRepositorio é abstrata (0.1255ms)
+✔ Materiais — RF-11, RNF-04, RN-04 (1.3379ms)
+▶ Regras de dependência entre camadas
+  ✔ controle positivo: o analisador enxerga as dependências reais (4.2588ms)
+  ✔ domínio (models/) não depende de nenhuma outra camada nem de biblioteca externa (5.1012ms)
+  ✔ serviços (servicos/) não conhecem HTTP nem as rotas (2.926ms)
+  ✔ rotas não conhecem o Supabase nem o adaptador: só a interface ServicoAutenticacao (PP-01) (2.0549ms)
+  ✔ só app.js (raiz de composição) cria o cliente do Supabase e escolhe o adaptador (10.2207ms)
+  ✔ variáveis de ambiente só são lidas em config.js (exceção documentada: RN-01 em models/usuario.js) (4.4269ms)
+✔ Regras de dependência entre camadas (31.919ms)
+▶ Fronteira entre cliente e servidor
+  ✔ o frontend nunca fala com o Supabase nem contém chaves: só conversa com a API (/api) (10.2578ms)
+✔ Fronteira entre cliente e servidor (10.7066ms)
+✔ GET /api/status responde com status ok (717.8312ms)
+ℹ tests 58
+ℹ suites 13
+ℹ pass 58
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 996.9309

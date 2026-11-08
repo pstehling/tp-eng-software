@@ -7,7 +7,13 @@
 | Módulo/componente local | Responsabilidade | Dependências permitidas | Requisitos relacionados |
 |---|---|---|---|
 | `[PREENCHER]` | `[PREENCHER]` | `[PREENCHER]` | `RF-XX` |
-| `src/servicos/` — `ServicoAutenticacao` e `AdaptadorSupabaseAuth` (Sprint 5) | Operações de conta (cadastrar, entrar, recuperar e redefinir senha) e tradução dos erros do provedor para motivos do domínio | O adaptador depende de `@supabase/supabase-js`; as rotas de `src/server.js` dependem só da interface `ServicoAutenticacao` | `RF-01`, `RF-02`, `RF-03`, `RN-03` |
+| `src/servicos/` — `ServicoAutenticacao` e `AdaptadorSupabaseAuth` (Sprint 5) | Operações de conta (cadastrar, entrar, recuperar e redefinir senha) e tradução dos erros do provedor para motivos do domínio | O adaptador depende de `@supabase/supabase-js`; as rotas (em `src/rotas/autenticacao.js` desde a Sprint 6) dependem só da interface `ServicoAutenticacao` | `RF-01`, `RF-02`, `RF-03`, `RN-03` |
+| `src/rotas/` — `status.js` e `autenticacao.js` (Sprint 6) | Contrato HTTP da API: validar a entrada com o domínio, chamar serviços e escolher status e mensagem | `src/models/` e a interface de `src/servicos/`; recebem o serviço por parâmetro, sem conhecer o Supabase | `RF-01`, `RF-02`, `RF-03`, `RN-01`, `RN-03` |
+| `src/app.js` (Sprint 6) | Montagem da aplicação: frontend estático, criação do Supabase e do adaptador, registro das rotas, 404 e tratamento de erros | Todas as camadas (é o único módulo autorizado a conhecer todas) | — |
+| `src/config.js` (Sprint 6) | Leitura das variáveis de ambiente da aplicação | `dotenv` | `RN-05`, `RNF-02` |
+| `src/server.js` (Sprint 6) | Apenas iniciar o servidor HTTP | `app.js`, `config.js` | — |
+
+> As linhas marcadas "Sprint 6" resultam da reorganização arquitetural descrita em [`docs/arquitetura/arquitetura.md`](../arquitetura/arquitetura.md) (DA-01, DA-04 e DA-05). As decisões globais ficam naquele documento; aqui fica apenas a decomposição local.
 
 ## 2. Registro de decisões
 
@@ -45,6 +51,7 @@ Quando houver refatoração, mostre evidência concreta:
 | Conhecimento do SDK do Supabase (DP-AUT) | 4 rotas com 5 chamadas `supabase.auth.*` — [`server.js` em `8e34340`](https://github.com/pstehling/tp-eng-software/blob/8e343400d24fbd62b958910466039cedefdacfa2/src/server.js#L59) | Só em [`adaptador-supabase-auth.js`](../../src/servicos/adaptador-supabase-auth.js) | Ponto único de mudança; rotas tratam só HTTP |
 | Detecção de "conta não verificada" (RN-03) | `error.message === 'Email not confirmed'` — [linha 94](https://github.com/pstehling/tp-eng-software/blob/8e343400d24fbd62b958910466039cedefdacfa2/src/server.js#L94) | `error.code === 'email_not_confirmed'` no adaptador | Regra não quebra se o fornecedor mudar a frase (coberto por teste) |
 | Testes das rotas | Precisavam imitar o SDK e suas mensagens | Podem injetar qualquer implementação de `ServicoAutenticacao` | Rotas testáveis sem Supabase |
+| Organização do backend (Sprint 6) | [`server.js` com 178 linhas](https://github.com/pstehling/tp-eng-software/blob/53f0ae0/src/server.js) acumulando configuração, criação do Supabase, rotas e inicialização | `config.js`, `app.js`, `rotas/status.js`, `rotas/autenticacao.js` e `server.js` só para iniciar | Cada módulo com um motivo para mudar; rotas reutilizáveis em outro app (teste em `tests/arquitetura.test.js`) |
 
 ## 4. Verificação dos princípios
 

@@ -39,11 +39,13 @@
 - `Organização de pastas e arquivos de diretórios para centralização de arquivos e materiais`
 - `Chat com IA que auxilia nas dúvidas e em temas específicos`
 
-**Tecnologias inicialmente consideradas:**
+**Arquitetura:** cliente/servidor em três camadas (interface no navegador, lógica de negócio em um servidor Node.js monolítico organizado no estilo MVC Web, dados no Supabase), com as regras de dependência entre camadas verificadas por testes automatizados. Diagramas, decisões (DA-01 a DA-06) e riscos em [`docs/arquitetura/arquitetura.md`](docs/arquitetura/arquitetura.md).
+
+**Tecnologias:**
 
 | Camada | Tecnologia | Observação |
 |---|---|---|
-| Backend | Node.js + Express | Estrutura inicial em `src/server.js`, usada como esqueleto executável desde a Sprint 1. |
+| Backend | Node.js 20+ + Express 4 | Desde a Sprint 6, organizado em `src/app.js` (montagem), `src/config.js` (ambiente), `src/rotas/` (API), `src/servicos/` (serviços externos) e `src/models/` (domínio); `src/server.js` só inicia o servidor. |
 | Frontend | HTML, CSS e JavaScript (estático, servido pelo Express) | Páginas em `src/public/` (início, materiais, cadastro, login e recuperação de senha). Poderá evoluir para um framework (ex.: React) nas próximas sprints, conforme necessidade. |
 | Autenticação/Segurança | Supabase Auth (hash de senha e sessão JWT) | Implementado na Sprint 3 ([PR #15](https://github.com/pstehling/tp-eng-software/pull/15)); as regras de domínio ficam em `src/models/usuario.js`. |
 | Persistência de dados | Supabase (PostgreSQL) para usuários; demais entidades a definir | Questões e materiais (RF-07, RF-11) ainda não são persistidos; decisão registrada em `docs/projeto/decisoes-de-projeto.md` a partir da Sprint 4. |
@@ -51,7 +53,7 @@
 | Testes | `node:test` (nativo do Node.js) | Ver `tests/`. |
 | Integração contínua | GitHub Actions | Workflow em `.github/workflows/ci.yml`, roda `npm test` a cada push/PR na `main`. |
 
-> Lista sujeita a revisão nas próximas sprints (Sprint 4 — princípios de projeto — e Sprint 6 — arquitetura), conforme o regulamento do trabalho.
+> Revisada na Sprint 6. A justificativa de cada tecnologia e a relação com os requisitos não funcionais estão em [`docs/arquitetura/arquitetura.md`](docs/arquitetura/arquitetura.md), seções 5 e 7.
 
 ## 3. Comece por aqui
 
@@ -129,15 +131,16 @@ Cada sprint vale **2,5 pontos**:
 
 A aplicação é um servidor **Node.js + Express** que serve as páginas de `src/public/` e expõe a API de autenticação (Supabase Auth). Pré-requisito: Node.js 20 ou superior.
 
+Os comandos abaixo funcionam **na raiz do repositório** (desde a Sprint 6). Dentro de `src/`, continuam valendo `npm install`, `npm start` e `npm test`.
+
 ```bash
-cd src
-npm install
-cp .env.example .env   # preencha SUPABASE_URL e SUPABASE_ANON_KEY
-npm start              # http://localhost:3000
-npm test               # testes automatizados em tests/
+npm run instalar             # instala as dependências de src/
+cp src/.env.example src/.env # preencha SUPABASE_URL e SUPABASE_ANON_KEY
+npm start                    # http://localhost:3000
+npm test                     # testes automatizados em tests/
 ```
 
-Detalhes de configuração em [`src/README.md`](src/README.md). Sem o `.env`, as páginas abrem normalmente, mas cadastro e login respondem que o serviço de autenticação não está configurado.
+Para conferir a configuração, acesse `http://localhost:3000/api/status`: o campo `servicos.autenticacao` deve ser `"configurado"`. Sem o `.env`, as páginas abrem normalmente, mas cadastro e login respondem que o serviço de autenticação não está configurado. Detalhes em [`src/README.md`](src/README.md) e na seção 8 de [`docs/arquitetura/arquitetura.md`](docs/arquitetura/arquitetura.md).
 
 ## 8. Regra de ouro da rastreabilidade
 

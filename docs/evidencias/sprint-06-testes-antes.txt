@@ -1,0 +1,75 @@
+
+> While(estuda)@0.1.0 test
+> node --test ../tests/*.test.js
+
+▶ AdaptadorSupabaseAuth — tradução da API do Supabase
+  ✔ ServicoAutenticacao é abstrata (38.5547ms)
+  ✔ cadastrar() repassa os dados no formato do Supabase (2.4993ms)
+  ✔ e-mail repetido é reconhecido pelo código do erro, mesmo com outra mensagem (2.74ms)
+  ✔ e-mail já confirmado é reconhecido pelo usuário fictício sem identidades (Confirm email ativo) (0.4947ms)
+  ✔ conta não confirmada é reconhecida pelo código do erro (RN-03) (0.6588ms)
+  ✔ demais erros de login viram CREDENCIAIS_INVALIDAS (0.3437ms)
+  ✔ redefinirSenha() com token inválido não tenta atualizar a senha (0.4739ms)
+  ✔ redefinirSenha() usa o token de acesso quando não há token de renovação (0.3374ms)
+✔ AdaptadorSupabaseAuth — tradução da API do Supabase (48.8389ms)
+▶ Rotas de autenticação com outra implementação da interface (sem Supabase)
+  ✔ cadastro e e-mail repetido (RF-01, US-02) (270.7674ms)
+  ✔ login antes e depois da confirmação do e-mail (RF-02, RN-03) (23.932ms)
+  ✔ senha errada recebe mensagem genérica (US-01, critério 2) (8.3037ms)
+  ✔ redefinição de senha com token inválido e válido (RF-03) (10.8405ms)
+✔ Rotas de autenticação com outra implementação da interface (sem Supabase) (327.4285ms)
+▶ Fluxo de autenticação
+  ✔ cadastro com e-mail não institucional é barrado antes do Supabase (RN-01) (215.1594ms)
+  ✔ cadastro válido cria a conta pendente de verificação (201) (8.8605ms)
+  ✔ e-mail já cadastrado retorna 409 (US-02, critério 2) (12.2114ms)
+  ✔ login de conta não verificada é bloqueado (RN-03) (4.2787ms)
+  ✔ credenciais incorretas retornam mensagem genérica (US-01, critério 2) (17.1742ms)
+  ✔ login válido redireciona o usuário (US-01, critério 1) (25.0601ms)
+  ✔ recuperação de senha envia link para a página correta (RF-03) (25.4355ms)
+  ✔ nova senha fora da regra é rejeitada antes do Supabase (16.9165ms)
+✔ Fluxo de autenticação (335.6108ms)
+▶ Usuario — RF-01 / RN-01 (validarCadastro)
+  ✔ aceita cadastro com e-mail institucional e senha válida (4.5581ms)
+  ✔ rejeita e-mail fora do domínio institucional (RN-01) (1.1279ms)
+  ✔ rejeita senha curta ou sem número (0.9934ms)
+  ✔ domínios aceitos podem ser configurados por variável de ambiente (0.8607ms)
+✔ Usuario — RF-01 / RN-01 (validarCadastro) (10.4413ms)
+▶ Usuario / TokenVerificacao — estados da conta (RF-02, RF-03, RN-03)
+  ✔ nova conta começa PENDENTE_VERIFICACAO e não pode autenticar (0.7862ms)
+  ✔ token válido muda a conta para ATIVO e libera o login (1.2489ms)
+  ✔ token expirado não ativa a conta (transição PENDENTE -> PENDENTE) (1.3242ms)
+  ✔ token de recuperação de senha não serve para verificar e-mail (0.3968ms)
+✔ Usuario / TokenVerificacao — estados da conta (RF-02, RF-03, RN-03) (5.1336ms)
+▶ Usuario — permissões (RN-02)
+  ✔ somente ADMIN pode editar o banco de questões (2.2918ms)
+✔ Usuario — permissões (RN-02) (2.6461ms)
+▶ Questao — RF-07, RF-08, RF-09 e progresso (RF-04)
+  ✔ filtra combinando matéria e dificuldade (US-06, critério 1) (0.8459ms)
+  ✔ busca textual no enunciado ignora maiúsculas (0.2106ms)
+  ✔ filtro sem correspondência retorna lista vazia (US-06, critério 2) (0.1719ms)
+  ✔ corrigir gera RespostaQuestao correta ou incorreta (0.4322ms)
+  ✔ corrigir rejeita alternativa de outra questão (0.2892ms)
+  ✔ validar impede questão sem gabarito válido ou sem matéria (RF-08) (0.5287ms)
+  ✔ progresso calcula percentual de acerto a partir do histórico (0.4828ms)
+✔ Questao — RF-07, RF-08, RF-09 e progresso (RF-04) (3.401ms)
+▶ ConversaIA — RF-10
+  ✔ mantém o contexto da questão e o histórico da conversa (0.8287ms)
+  ✔ limita o histórico enviado à IA e rejeita mensagem vazia (0.568ms)
+✔ ConversaIA — RF-10 (1.5749ms)
+▶ Materiais — RF-11, RNF-04, RN-04
+  ✔ aceita PDF dentro do limite na pasta do próprio usuário (0.8746ms)
+  ✔ aceita exatamente 50 MB e rejeita acima disso (US-10, critério 2) (0.5521ms)
+  ✔ rejeita formato não permitido (0.3489ms)
+  ✔ nega upload na pasta de outro usuário (RN-04) (0.2673ms)
+  ✔ itens do repositório só são acessíveis pelo dono (0.3976ms)
+  ✔ ItemDoRepositorio é abstrata (0.4427ms)
+✔ Materiais — RF-11, RNF-04, RN-04 (3.322ms)
+✔ GET /api/status responde com status ok (947.8846ms)
+ℹ tests 45
+ℹ suites 9
+ℹ pass 45
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1237.8673

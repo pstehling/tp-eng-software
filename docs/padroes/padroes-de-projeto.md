@@ -52,7 +52,7 @@ Consequências concretas observadas no projeto:
   - **Target (alvo):** `ServicoAutenticacao` + `MOTIVOS_FALHA_AUTENTICACAO` — [`src/servicos/servico-autenticacao.js`](../../src/servicos/servico-autenticacao.js)
   - **Adapter:** `AdaptadorSupabaseAuth` — [`src/servicos/adaptador-supabase-auth.js`](../../src/servicos/adaptador-supabase-auth.js)
   - **Adaptee (adaptado):** `SupabaseAuthClient` (`clienteSupabase.auth`, de `@supabase/supabase-js`)
-  - **Client:** as rotas `/api/cadastro`, `/api/login`, `/api/recuperar-senha` e `/api/salvar-nova-senha` e a função `obterServicoAutenticacao()` — [`src/server.js`](../../src/server.js)
+  - **Client:** as rotas `/api/cadastro`, `/api/login`, `/api/recuperar-senha` e `/api/salvar-nova-senha` e a função `obterServicoAutenticacao()` — em `src/server.js` na Sprint 5; desde a Sprint 6, rotas em [`src/rotas/autenticacao.js`](../../src/rotas/autenticacao.js) e função em [`src/app.js`](../../src/app.js) (reorganização arquitetural, ver [`arquitetura.md`](../arquitetura/arquitetura.md))
 - **Requisitos relacionados:** `RF-01`, `RF-02`, `RF-03`, `RN-03`, `RNF-02`
 - **Issue/PR:** `[PREENCHER — Issue de implementação e validação do padrão]` / `[PREENCHER — PR da branch sprint-05]`
 
@@ -147,9 +147,9 @@ A rota decide **o que responder** (status e mensagem em português); o adaptador
 |---|---|---|
 | Target | `ServicoAutenticacao` (classe abstrata, mesmo estilo de `ItemDoRepositorio`) e `MOTIVOS_FALHA_AUTENTICACAO` | [`src/servicos/servico-autenticacao.js`](../../src/servicos/servico-autenticacao.js) |
 | Adapter | `AdaptadorSupabaseAuth`; tradução de erros em `emailJaCadastrado()` e `emailNaoConfirmado()` | [`src/servicos/adaptador-supabase-auth.js`](../../src/servicos/adaptador-supabase-auth.js) |
-| Adaptee | cliente `@supabase/supabase-js` (`createClient`), criado em `obterSupabase()` | [`src/server.js#L20`](../../src/server.js#L20) |
-| Client — ponto de criação | `obterServicoAutenticacao()` | [`src/server.js#L32`](../../src/server.js#L32) |
-| Client — rotas | `/api/cadastro`, `/api/login`, `/api/recuperar-senha`, `/api/salvar-nova-senha` | [`#L56`](../../src/server.js#L56), [`#L92`](../../src/server.js#L92), [`#L118`](../../src/server.js#L118), [`#L143`](../../src/server.js#L143) |
+| Adaptee | cliente `@supabase/supabase-js` (`createClient`), criado em `obterSupabase()` | [`server.js#L20` (Sprint 5)](https://github.com/pstehling/tp-eng-software/blob/53f0ae07dcdf9502837b602c08c7687af18d127d/src/server.js#L20); desde a Sprint 6 em [`src/app.js`](../../src/app.js) |
+| Client — ponto de criação | `obterServicoAutenticacao()` | [`server.js#L32` (Sprint 5)](https://github.com/pstehling/tp-eng-software/blob/53f0ae07dcdf9502837b602c08c7687af18d127d/src/server.js#L32); desde a Sprint 6 em [`src/app.js`](../../src/app.js) |
+| Client — rotas | `/api/cadastro`, `/api/login`, `/api/recuperar-senha`, `/api/salvar-nova-senha` | [`#L56`](https://github.com/pstehling/tp-eng-software/blob/53f0ae07dcdf9502837b602c08c7687af18d127d/src/server.js#L56), [`#L92`](https://github.com/pstehling/tp-eng-software/blob/53f0ae07dcdf9502837b602c08c7687af18d127d/src/server.js#L92), [`#L118`](https://github.com/pstehling/tp-eng-software/blob/53f0ae07dcdf9502837b602c08c7687af18d127d/src/server.js#L118), [`#L143`](https://github.com/pstehling/tp-eng-software/blob/53f0ae07dcdf9502837b602c08c7687af18d127d/src/server.js#L143) (Sprint 5); desde a Sprint 6 em [`src/rotas/autenticacao.js`](../../src/rotas/autenticacao.js) |
 | Teste do adaptador | 8 testes: tradução de parâmetros e de `error.code`, mesmo com mensagem alterada | [`tests/adaptador-autenticacao.test.js`](../../tests/adaptador-autenticacao.test.js) |
 | Teste do cliente com outra implementação | `ServicoAutenticacaoEmMemoria`: as rotas funcionam sem Supabase algum | [`tests/adaptador-autenticacao.test.js`](../../tests/adaptador-autenticacao.test.js) |
 | Teste de não regressão | `tests/auth.test.js` **sem nenhuma alteração** continua passando — o Supabase falso agora é chamado através do adaptador | [`tests/auth.test.js`](../../tests/auth.test.js) |
@@ -167,7 +167,7 @@ Links fixados na tag (funcionam depois que a tag `sprint-05` for enviada): [`src
 | Como testar uma rota | Imitar o SDK do Supabase e suas frases | Injetar qualquer implementação de `ServicoAutenticacao` em `app.locals.servicoAutenticacao` |
 | Contrato HTTP com o frontend | status 201/400/401/403/409/503 + `{ sucesso, erro, mensagem, redirecionar }` | **Idêntico** — nenhuma alteração em `src/public/` |
 
-Trecho da rota de login depois da mudança ([`src/server.js#L92`](../../src/server.js#L92)):
+Trecho da rota de login depois da mudança ([`server.js#L92` na Sprint 5](https://github.com/pstehling/tp-eng-software/blob/53f0ae07dcdf9502837b602c08c7687af18d127d/src/server.js#L92); desde a Sprint 6 em [`src/rotas/autenticacao.js`](../../src/rotas/autenticacao.js)):
 
 ```js
 const resultado = await servicoAuth.entrar({ email, senha });
