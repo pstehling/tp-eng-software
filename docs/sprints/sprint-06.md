@@ -37,7 +37,7 @@
 
 ### O que foi implementado ou evoluído
 
-`[Explique o comportamento demonstrável e relacione-o aos requisitos.]`
+`Foi implementado a verificação por email, a recuperação de senha e o cadastro e login foi atualizado para aceitar apenas contas que já foram verificadas através do email de confirmação enviado`
 
 ### Como executar e verificar
 
