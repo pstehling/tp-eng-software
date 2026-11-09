@@ -61,7 +61,7 @@ npm start    # http://localhost:3000 — cadastro, login e recuperação de senh
 
 | Requisito/Issue | Código ou protótipo | Evidência de execução |
 |---|---|---|
-| RF-01, RF-02, RF-03, RN-03 / `[#XX — T-05]` | [`src/servicos/`](https://github.com/pstehling/tp-eng-software/tree/sprint-05/src/servicos), [`src/server.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/server.js) | [antes: 33/33](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-antes.txt), [depois: 45/45](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-depois.txt) |
+| RF-01, RF-02, RF-03, RN-03 / `[#21 — T-05]` | [`src/servicos/`](https://github.com/pstehling/tp-eng-software/tree/sprint-05/src/servicos), [`src/server.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/server.js) | [antes: 33/33](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-antes.txt), [depois: 45/45](https://github.com/pstehling/tp-eng-software/blob/sprint-05/docs/evidencias/sprint-05-testes-depois.txt) |
 
 ## 5. Scrum e gestão do trabalho — 0,50 ponto
 
@@ -69,8 +69,8 @@ npm start    # http://localhost:3000 — cadastro, login e recuperação de senh
 
 | Issue | Descrição | Responsável | Critério de aceitação/conclusão | Situação |
 |---|---|---|---|---|
-| `[#XX]` | T-05 — Aplicar o padrão Adapter à autenticação | `[PREENCHER]` | Rotas sem chamadas diretas ao Supabase; erros identificados por código; testes anteriores sem alteração passando; documentação do padrão | Concluída |
-| `[#XX]` | T-06 — Diferenciar falha de comunicação de credenciais inválidas no login | `[PREENCHER]` | `[PREENCHER]` | Pendente (débito registrado) |
+| `[#21]` | T-05 — Aplicar o padrão Adapter à autenticação | `[PREENCHER]` | Rotas sem chamadas diretas ao Supabase; erros identificados por código; testes anteriores sem alteração passando; documentação do padrão | Concluída |
+| `[#22]` | T-06 — Diferenciar falha de comunicação de credenciais inválidas no login | `[PREENCHER]` | `[PREENCHER]` | Pendente (débito registrado) |
 
 ### Acompanhamento
 
@@ -93,9 +93,9 @@ npm start    # http://localhost:3000 — cadastro, login e recuperação de senh
 
 | Requisito | Issue | Artefato/modelo/decisão | Código | Teste/evidência |
 |---|---|---|---|---|
-| `RF-01` | [#2](https://github.com/pstehling/tp-eng-software/issues/2), `[#XX]` | PP-01, DP-AUT, modelagem 4.1 | [`/api/cadastro`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/server.js), [adaptador](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/servicos/adaptador-supabase-auth.js) | [`tests/auth.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/auth.test.js), [`tests/adaptador-autenticacao.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/adaptador-autenticacao.test.js) |
-| `RF-02` / `RN-03` | [#1](https://github.com/pstehling/tp-eng-software/issues/1), `[#XX]` | PP-01, DP-AUT, modelagem 4.1 | [`/api/login`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/server.js), [adaptador](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/servicos/adaptador-supabase-auth.js) | [`tests/auth.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/auth.test.js), [`tests/adaptador-autenticacao.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/adaptador-autenticacao.test.js) |
-| `RF-03` | [#2](https://github.com/pstehling/tp-eng-software/issues/2), `[#XX]` | PP-01, DP-AUT, modelagem 4.1 | [`/api/recuperar-senha` e `/api/salvar-nova-senha`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/server.js), [adaptador](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/servicos/adaptador-supabase-auth.js) | [`tests/auth.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/auth.test.js), [`tests/adaptador-autenticacao.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/adaptador-autenticacao.test.js) |
+| `RF-01` | [#2](https://github.com/pstehling/tp-eng-software/issues/2), `[#21]` | PP-01, DP-AUT, modelagem 4.1 | [`/api/cadastro`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/server.js), [adaptador](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/servicos/adaptador-supabase-auth.js) | [`tests/auth.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/auth.test.js), [`tests/adaptador-autenticacao.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/adaptador-autenticacao.test.js) |
+| `RF-02` / `RN-03` | [#1](https://github.com/pstehling/tp-eng-software/issues/1), `[#21]` | PP-01, DP-AUT, modelagem 4.1 | [`/api/login`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/server.js), [adaptador](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/servicos/adaptador-supabase-auth.js) | [`tests/auth.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/auth.test.js), [`tests/adaptador-autenticacao.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/adaptador-autenticacao.test.js) |
+| `RF-03` | [#2](https://github.com/pstehling/tp-eng-software/issues/2), `[#21]` | PP-01, DP-AUT, modelagem 4.1 | [`/api/recuperar-senha` e `/api/salvar-nova-senha`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/server.js), [adaptador](https://github.com/pstehling/tp-eng-software/blob/sprint-05/src/servicos/adaptador-supabase-auth.js) | [`tests/auth.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/auth.test.js), [`tests/adaptador-autenticacao.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-05/tests/adaptador-autenticacao.test.js) |
 
 ## 7. Revisão do incremento
 

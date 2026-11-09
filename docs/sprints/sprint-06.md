@@ -68,7 +68,7 @@ npm start                      # http://localhost:3000
 
 | Requisito/Issue | Código ou protótipo | Evidência de execução |
 |---|---|---|
-| RNF-01 a RNF-04 / `[#XX — T-07]` | [`src/app.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/app.js), [`src/rotas/`](https://github.com/pstehling/tp-eng-software/tree/sprint-06/src/rotas), [`src/config.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/config.js) | [antes: 45/45](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/sprint-06-testes-antes.txt), [depois: 58/58](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/sprint-06-testes-depois.txt), [`tests/arquitetura.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/tests/arquitetura.test.js) |
+| RNF-01 a RNF-04 / `[#23 — T-07]` | [`src/app.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/app.js), [`src/rotas/`](https://github.com/pstehling/tp-eng-software/tree/sprint-06/src/rotas), [`src/config.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/config.js) | [antes: 45/45](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/sprint-06-testes-antes.txt), [depois: 58/58](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/sprint-06-testes-depois.txt), [`tests/arquitetura.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/tests/arquitetura.test.js) |
 | RF-01, RF-02, RF-03 / [#1](https://github.com/pstehling/tp-eng-software/issues/1), [#2](https://github.com/pstehling/tp-eng-software/issues/2) | [`src/rotas/autenticacao.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/rotas/autenticacao.js) | [`tests/auth.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/tests/auth.test.js) e [`tests/adaptador-autenticacao.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/tests/adaptador-autenticacao.test.js) passando sem alteração |
 
 ## 5. Scrum e gestão do trabalho — 0,50 ponto
@@ -77,10 +77,11 @@ npm start                      # http://localhost:3000
 
 | Issue | Descrição | Responsável | Critério de aceitação/conclusão | Situação |
 |---|---|---|---|---|
-| `[#XX]` | T-07 — Documentar a arquitetura e reorganizar o backend em camadas | `[PREENCHER]` | `arquitetura.md` com todos os itens do regulamento; cada componente do diagrama ligado a um arquivo real; testes anteriores passando sem alteração | Concluída |
-| `[#XX]` | T-08 — Proteger rotas privadas com JWT (RNF-02) | `[PREENCHER]` | `[PREENCHER]` | Pendente (débito registrado) |
-| `[#XX]` | T-10 — Publicar a aplicação | `[PREENCHER]` | `[PREENCHER]` | Pendente |
-| `[#XX]` | T-11 — Retirar `src/.env` do git e gerar novas chaves | `[PREENCHER]` | `[PREENCHER]` | Pendente |
+| `[#23]` | T-07 — Documentar a arquitetura e reorganizar o backend em camadas | `[PREENCHER]` | `arquitetura.md` com todos os itens do regulamento; cada componente do diagrama ligado a um arquivo real; testes anteriores passando sem alteração | Concluída |
+| `[#24]` | T-08 — Proteger rotas privadas com JWT (RNF-02) | `[PREENCHER]` | `[PREENCHER]` | Pendente (débito registrado) |
+| `[#25]` | T-09 — Definir e implementar a persistência de questões e materiais | `[PREENCHER]` | `[PREENCHER]` | Pendente |
+| `[#26]` | T-10 — Publicar a aplicação | `[PREENCHER]` | `[PREENCHER]` | Pendente |
+| `[#27]` | T-11 — Retirar `src/.env` do git e gerar novas chaves | `[PREENCHER]` | `[PREENCHER]` | Pendente |
 
 ### Acompanhamento
 
@@ -105,7 +106,7 @@ npm start                      # http://localhost:3000
 |---|---|---|---|---|
 | `RF-01` a `RF-03` | [#1](https://github.com/pstehling/tp-eng-software/issues/1), [#2](https://github.com/pstehling/tp-eng-software/issues/2) | DA-03, PP-01, modelagem 4.1 | [`src/rotas/autenticacao.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/rotas/autenticacao.js) | [`tests/auth.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/tests/auth.test.js) |
 | `RNF-01` | [#3](https://github.com/pstehling/tp-eng-software/issues/3) | DA-02 | [`src/public/`](https://github.com/pstehling/tp-eng-software/tree/sprint-06/src/public) | Páginas servidas: [`tests/arquitetura.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/tests/arquitetura.test.js); Lighthouse na Sprint 7 |
-| `RNF-02` | [#1](https://github.com/pstehling/tp-eng-software/issues/1), `[#XX — T-08]` | DA-03, DA-04 | [`src/servicos/`](https://github.com/pstehling/tp-eng-software/tree/sprint-06/src/servicos), [`src/config.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/config.js) | Hash: Supabase; JWT em rotas privadas: ainda não aplicável (T-08) |
+| `RNF-02` | [#1](https://github.com/pstehling/tp-eng-software/issues/1), `[#24 — T-08]` | DA-03, DA-04 | [`src/servicos/`](https://github.com/pstehling/tp-eng-software/tree/sprint-06/src/servicos), [`src/config.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/config.js) | Hash: Supabase; JWT em rotas privadas: ainda não aplicável (T-08) |
 | `RNF-03` | [#6](https://github.com/pstehling/tp-eng-software/issues/6) | DA-01 | [`src/models/questao.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/models/questao.js) | Ainda não aplicável (listagem não implementada) |
 | `RNF-04` | [#10](https://github.com/pstehling/tp-eng-software/issues/10) | Domínio; rota futura em `src/rotas/` | [`src/models/materiais.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/models/materiais.js) | [`tests/models.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/tests/models.test.js) |
 
