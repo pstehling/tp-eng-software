@@ -3,6 +3,7 @@ sequenceDiagram
     participant UI as Frontend (cadastro/ e login/)
     participant API as Backend (server.js)
     participant M as Usuario (models/usuario.js)
+    participant AD as AdaptadorSupabaseAuth (servicos/)
     participant AUTH as Supabase Auth
 
     E->>UI: Preenche nome, e-mail e senha
@@ -13,13 +14,16 @@ sequenceDiagram
         M-->>API: erros[]
         API-->>UI: 400 + mensagens
     else Dados válidos
-        API->>AUTH: signUp(email, senha)
+        API->>AD: cadastrar(nome, email, senha)
+        AD->>AUTH: signUp(email, password)
         alt E-mail já cadastrado
-            AUTH-->>API: erro "already registered"
+            AUTH-->>AD: erro code "user_already_exists"
+            AD-->>API: motivo EMAIL_JA_CADASTRADO
             API-->>UI: 409 e-mail já cadastrado
         else Conta criada como PENDENTE_VERIFICACAO
             AUTH->>AUTH: Gera o hash da senha
             AUTH-->>E: E-mail com link de verificação
+            AD-->>API: sucesso
             API-->>UI: 201 verifique seu e-mail
         end
     end
@@ -29,12 +33,16 @@ sequenceDiagram
 
     E->>UI: E-mail + senha
     UI->>API: POST /api/login
-    API->>AUTH: signInWithPassword()
+    API->>AD: entrar(email, senha)
+    AD->>AUTH: signInWithPassword(email, password)
 
     alt Conta ainda pendente
+        AD-->>API: motivo EMAIL_NAO_CONFIRMADO
         API-->>UI: 403 confirme seu e-mail
     else Credenciais inválidas
+        AD-->>API: motivo CREDENCIAIS_INVALIDAS
         API-->>UI: 401 mensagem genérica
     else Autenticação válida
+        AD-->>API: sucesso
         API-->>UI: 200 + redirecionamento (sessão JWT gerida pelo Supabase)
     end
