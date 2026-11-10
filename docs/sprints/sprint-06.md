@@ -94,9 +94,9 @@ npm start                      # http://localhost:3000
 
 | Tipo de evidência | Link | O que comprova |
 |---|---|---|
-| Issue | `https://github.com/pstehling/tp-eng-software/issues/26` | Tarefa T-08 (arquitetura e reorganização) |
-| Pull Request | `https://github.com/pstehling/tp-eng-software/pull/28` | Revisão e integração da branch `sprint-06` |
-| Commit | `[link]` | Reorganização do backend e documentação da arquitetura |
+| Issue | [#23](https://github.com/pstehling/tp-eng-software/issues/23) | Tarefa T-07 (arquitetura e reorganização) |
+| Pull Request | [#28](https://github.com/pstehling/tp-eng-software/pull/28) | Revisão e integração da branch `sprint-06` |
+| Commit | [`5e698ce`](https://github.com/pstehling/tp-eng-software/commit/5e698ced77a1d280931533a722c3c3a0f1dcf3de) | Reorganização do backend e documentação da arquitetura |
 | Código/arquivo | [`src/app.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/app.js), [`src/rotas/`](https://github.com/pstehling/tp-eng-software/tree/sprint-06/src/rotas) · [antes (`server.js` em `53f0ae0`)](https://github.com/pstehling/tp-eng-software/blob/53f0ae07dcdf9502837b602c08c7687af18d127d/src/server.js) | Código organizado conforme a arquitetura e estado anterior |
 | Teste/captura/relatório | [`tests/arquitetura.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/tests/arquitetura.test.js), [`tests/regras-arquitetura.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/tests/regras-arquitetura.test.js), [saída antes](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/sprint-06-testes-antes.txt), [saída depois](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/sprint-06-testes-depois.txt) | Comportamento preservado (45/45 → 58/58) e regras de arquitetura verificadas |
 
@@ -112,9 +112,9 @@ npm start                      # http://localhost:3000
 
 ## 7. Revisão do incremento
 
-- **O que foi demonstrado:** `[PREENCHER]`
-- **Critérios atendidos:** `[PREENCHER]`
-- **Itens não concluídos:** publicação da aplicação (T-10); proteção de rotas por JWT (T-08); regeneração da imagem `03-sequencia-cadastro-login.png` a partir do `.mmd` atualizado `[PREENCHER — confirmar]`.
+- **O que foi demonstrado:** fluxo de conta executado no navegador, com o Supabase real, depois da reorganização do servidor: [cadastro realizado](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/Evidencia1.jpeg), [e-mail de confirmação recebido](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/Evidencia2.jpeg), [cadastro com e-mail repetido recusado](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/Evidencia4.jpeg), [login bloqueado para conta não verificada](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/Evidencia8.jpeg), [login após confirmação abrindo a tela de materiais](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/Evidencia3.jpeg), [pedido de recuperação de senha](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/Evidencia5.jpeg), [e-mail de redefinição recebido](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/Evidencia6.jpeg) e [tela de nova senha](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/Evidencia7.jpeg).
+- **Critérios atendidos:** o contrato HTTP com o frontend não mudou (as páginas funcionam sem alteração em `src/public/`); os 58 testes automatizados passam; RF-01, RF-02, RF-03 e RN-03 continuam funcionando com o Supabase real. Não foram registrados em print o login com senha errada nem a gravação da nova senha.
+- **Itens não concluídos:** publicação da aplicação (T-10); proteção de rotas por JWT (T-08); regeneração da imagem `03-sequencia-cadastro-login.png` a partir do `.mmd` atualizado (o `.mmd` está correto; o `.png` ainda mostra a versão da Sprint 5).
 - **Motivo das pendências:** `[PREENCHER]`
 - **Feedback recebido e ajustes:** `[PREENCHER]`
 
@@ -132,6 +132,6 @@ npm start                      # http://localhost:3000
 
 ## 10. Links enviados no UFLA Virtual
 
-- **Tag `sprint-06`:** `[COLAR LINK]`
-- **Este arquivo na tag:** `[COLAR LINK]`
+- **Tag `sprint-06`:** https://github.com/pstehling/tp-eng-software/releases/tag/sprint-06
+- **Este arquivo na tag:** https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/sprints/sprint-06.md
 - **Observação adicional:** `[quando necessária]`
