@@ -13,7 +13,8 @@ npm test
 
 Isso executa `node --test ../tests/*.test.js`, que roda todos os arquivos `*.test.js`
 deste diretório. Os testes **não** precisam do `.env` nem de acesso à internet: o Supabase
-é substituído por um cliente falso em `tests/auth.test.js`.
+é substituído por um cliente falso em `tests/auth.test.js`, e em `tests/adaptador-autenticacao.test.js`
+também por uma implementação em memória de `ServicoAutenticacao`.
 
 ## Mapeamento
 
@@ -22,6 +23,9 @@ deste diretório. Os testes **não** precisam do `.env` nem de acesso à interne
 | `tests/status.test.js` | A aplicação sobe e `GET /api/status` responde `200` (CT-00). | Estrutura inicial (Sprint 1) |
 | `tests/models.test.js` | Regras dos modelos de domínio: cadastro e e-mail institucional, estados da conta, permissões, filtro e correção de questões, progresso, conversa com IA e validação de upload. | RF-01 a RF-11, RN-01 a RN-05, RNF-04 — diagrama de classes, 4.4 e 4.5 da modelagem |
 | `tests/auth.test.js` | Fluxo de cadastro, e-mail repetido, conta pendente, login e recuperação de senha pela API. | RF-01, RF-02, RF-03, RN-01, RN-03 — diagrama 4.1 da modelagem |
+| `tests/adaptador-autenticacao.test.js` | Padrão Adapter (Sprint 5): o `AdaptadorSupabaseAuth` traduz parâmetros e erros do Supabase pelo código do erro, e as rotas funcionam com outra implementação de `ServicoAutenticacao`, sem Supabase. | RF-01, RF-02, RF-03, RN-03 — PP-01 em `docs/padroes/padroes-de-projeto.md` |
+| `tests/arquitetura.test.js` | Organização arquitetural (Sprint 6): frontend e API servidos pela mesma origem, `/api/status` com estado da configuração, 404 em JSON, erro inesperado vira 500 sem derrubar o servidor e rotas reutilizáveis em outro app Express. | DA-01, DA-02, DA-04, DA-05 em `docs/arquitetura/arquitetura.md` |
+| `tests/regras-arquitetura.test.js` | Regras de dependência entre camadas (no estilo ArchUnit): domínio independente, serviços sem HTTP, rotas sem Supabase, só `app.js` cria serviços externos, ambiente lido só em `config.js` e frontend só chamando `/api`. | DA-06 e seção 3.2 de `docs/arquitetura/arquitetura.md` |
 
 A partir da Sprint 7, os casos de teste formais (`CT-XX`) serão documentados em
 `docs/testes/plano-de-testes.md` e relacionados a estes arquivos.

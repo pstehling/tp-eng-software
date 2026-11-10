@@ -2,7 +2,7 @@
 
 > O backlog operacional deve ser mantido no **GitHub Project**, por meio de Issues. Este documento explica a convenção adotada e apresenta uma visão rastreável dos itens.
 >
-> **Última atualização:** Sprint 3 — 29/09/2026.
+> **Última atualização:** Sprint 6 — 08/11/2026.
 
 ## 1. Link do GitHub Project
 
@@ -53,8 +53,25 @@ Essa ordem é a mesma refletida na coluna "Prioridade" de `docs/requisitos/requi
 | `T-02` | — | Tarefa técnica | Implementar os modelos de domínio do diagrama de classes (`src/models/`) com testes automatizados | Alta | RF-01 a RF-11, RN-01 a RN-05 | 3 | Grupo | **Concluído** (33 testes aprovados — ver `docs/sprints/sprint-03.md`) |
 | `T-03` | — | Tarefa técnica | Integrar `Usuario` ao fluxo de cadastro/login e corrigir dependências e rotas do fluxo de autenticação | Alta | RF-01, RF-02, RF-03, RN-01 | 3 | Grupo | **Concluído** |
 | `T-04` | — | Documentação | Versionar arquivos-fonte (`.mmd`) e imagens (`.png`) dos diagramas em `docs/modelagem/imagens/` | Média | — | 3 | Grupo | **Concluído** |
+| `T-05` | [`#21`](https://github.com/pstehling/tp-eng-software/issues/21) | Tarefa técnica | Aplicar o padrão Adapter à autenticação: isolar o Supabase Auth atrás de `ServicoAutenticacao`, identificar erros por código e validar com testes (PP-01, DP-AUT) | Alta | RF-01, RF-02, RF-03, RN-03 | 5 | `[PREENCHER]` | **Concluído** (45 testes aprovados — ver `docs/padroes/padroes-de-projeto.md`) |
+| `T-06` | [`#22`](https://github.com/pstehling/tp-eng-software/issues/22) | Débito técnico | Diferenciar falha de comunicação com o provedor de "credenciais inválidas" no login (hoje ambas respondem `401`); a mudança fica restrita a `AdaptadorSupabaseAuth` | Baixa | RF-02 | — | `[PREENCHER]` | Planejado |
+| `T-07` | [`#23`](https://github.com/pstehling/tp-eng-software/issues/23) | Tarefa técnica | Documentar a arquitetura (`docs/arquitetura/arquitetura.md`) e reorganizar o backend em camadas: `config.js`, `app.js`, `rotas/` e `server.js` só para iniciar; tratamento centralizado de erros; testes automatizados das regras de dependência entre camadas; execução a partir da raiz | Alta | RNF-01 a RNF-04 | 6 | `[PREENCHER]` | **Concluído** (58 testes aprovados — ver `docs/arquitetura/arquitetura.md`, seção 11) |
+| `T-08` | [`#24`](https://github.com/pstehling/tp-eng-software/issues/24) | Débito técnico (arquitetural) | Proteger rotas privadas com o JWT do Supabase (RNF-02): o login deve devolver a sessão, o frontend deve enviá-la e um middleware em `src/rotas/` deve responder `401` sem token válido | Alta | RNF-02, RF-02, RN-04 | 7 | `[PREENCHER]` | Planejado (risco R-03) |
+| `T-09` | [`#25`](https://github.com/pstehling/tp-eng-software/issues/25) | Débito técnico (arquitetural) | Implementar a persistência de questões, respostas e materiais no PostgreSQL e no Storage do Supabase (DA-07), atrás de uma interface em `src/servicos/` | Alta | RF-04 a RF-11 | — | `[PREENCHER]` | Planejado (risco R-04) |
+| `T-10` | [`#26`](https://github.com/pstehling/tp-eng-software/issues/26) | Tarefa técnica | Publicar a aplicação no Render (DA-08), configurar `APP_URL` e as URLs de redirecionamento no Supabase | Média | — | — | `[PREENCHER]` | Planejado (risco R-05) |
+| `T-11` | [`#27`](https://github.com/pstehling/tp-eng-software/issues/27) | Débito técnico (segurança) | Retirar `src/.env` do versionamento e gerar novas chaves no Supabase (as atuais estão no histórico do git desde o commit `aeaabd1`) | Alta | RNF-02 | 7 | `[PREENCHER]` | Planejado (risco R-02) |
 
-Isso totaliza **14 itens** (4 tarefas técnicas/documentação + 10 histórias). Os itens T-02 a T-04 surgiram durante a modelagem da Sprint 3.
+Isso totaliza **21 itens** (11 tarefas técnicas/documentação/débito + 10 histórias). Os itens T-02 a T-04 surgiram durante a modelagem da Sprint 3; T-05 e T-06, na Sprint 5; T-07 a T-11, na análise arquitetural da Sprint 6 (riscos R-02 a R-05 em `docs/arquitetura/arquitetura.md`).
+
+### 4.1 Itens priorizados para a sprint corrente (Sprint 6)
+
+| Item | Motivo da prioridade | Situação |
+|---|---|---|
+| `T-07` — arquitetura e reorganização do backend | Entrega central da Sprint 6 | Concluído |
+| `T-11` — retirar `src/.env` do git e gerar novas chaves | Prioridade Alta: as chaves já estão expostas no histórico (R-02) | Planejado para a Sprint 7 |
+| `T-08` — proteger rotas privadas com JWT | Prioridade Alta: RNF-02 não atendido; precisa existir antes de dados pessoais (R-03) | Planejado para a Sprint 7 |
+
+Prioridades de T-06 e T-08 a T-11 definidas pelo Scrum Master em 09/11/2026, pendentes de validação do grupo ([ata](reunioes/2026-11-09-decisoes-sprint-06.md)).
 
 ## 5. Definition of Ready
 
@@ -84,3 +101,5 @@ Um item está concluído quando:
 | Sprint 1 | Backlog inicial estruturado com 1 tarefa técnica (T-01) e as 10 histórias de usuário (US-01 a US-10), mapeadas a partir dos requisitos funcionais levantados. | Consolidar o levantamento de requisitos do grupo em itens rastreáveis e priorizados, conforme exigido pelo regulamento (mínimo de dez itens). | |
 | Sprint 2 | Nenhum item novo criado; backlog revisado para confirmar consistência entre requisitos (RF/RNF) e histórias já previstas. As 10 issues iniciais (US-01 a US-10) foram criadas no GitHub como `#1` a `#10`. | Os requisitos funcionais e não funcionais foram detalhados e formalizados em `docs/requisitos/requisitos.md` nesta sprint, sem alterar o escopo das histórias já previstas na Sprint 1; as issues foram migradas do material de apoio para o GitHub para tornar o backlog rastreável. | `docs/requisitos/requisitos.md`, [issues #1–#10](https://github.com/pstehling/tp-eng-software/issues) |
 | Sprint 3 | Criadas as tarefas T-02 a T-04; US-01 e US-02 passaram a "Implementado". | A modelagem mostrou que a documentação citava `src/models/` e `tests/models.test.js`, que ainda não existiam, e que o fluxo de autenticação precisava de ajustes (dependências ausentes no `package.json`, rota de recuperação de senha divergente entre frontend e backend). | `docs/modelagem/modelagem.md`, [PR #15](https://github.com/pstehling/tp-eng-software/pull/15) |
+| Sprint 5 | Criadas a tarefa T-05 (concluída) e o débito técnico T-06. | A análise de padrões encontrou as rotas de autenticação acopladas ao SDK do Supabase e dependentes do texto das mensagens de erro (T-05). Ao aplicar o Adapter, verificou-se que uma falha de rede no login é respondida como credenciais inválidas; o comportamento foi mantido para não alterar o contrato nesta sprint e registrado como T-06. | `docs/padroes/padroes-de-projeto.md`, `docs/projeto/decisoes-de-projeto.md` (DP-AUT) |
+| Sprint 6 | Criadas a tarefa T-07 (concluída) e os débitos T-08 a T-11. | A documentação da arquitetura confrontou os RNF com o código: a proteção de rotas por JWT (RNF-02) não existe (T-08), a persistência de questões e materiais não está definida (T-09), a aplicação não está publicada (T-10) e as chaves do Supabase estão versionadas (T-11). Em 09/11/2026, os itens foram priorizados (segurança primeiro) e as tecnologias de T-09 e T-10 foram escolhidas. | `docs/arquitetura/arquitetura.md` (seções 5, 7 e 9), [ata de 09/11/2026](reunioes/2026-11-09-decisoes-sprint-06.md) |

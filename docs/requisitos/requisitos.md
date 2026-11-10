@@ -39,6 +39,17 @@ Os requisitos do **While(estuda)** foram identificados e consolidados por meio d
 | RNF-03 | Desempenho | Consultas e filtragens na listagem de questões e matérias devem responder em no máximo $2,0\\text{s}$ sob uso normal. | Execução de testes automatizados de carga e tempo de resposta na API. | \#03, \#05, \#06, \#09 |
 | RNF-04 | Armazenamento | O upload de arquivos pessoais deve aceitar formatos PDF, PNG, JPG e TXT, aplicando o limite máximo de 50 MB por arquivo. | Validação via middleware de backend durante tentativas de envio de arquivos variados e acima do limite. | \#10 |
 
+### 4.1 Relação com a arquitetura (atualização da Sprint 6)
+
+O texto dos requisitos acima não foi alterado. Esta tabela registra como cada RNF é atendido pela arquitetura e a situação verificada na Sprint 6. Detalhes em [`docs/arquitetura/arquitetura.md`](../arquitetura/arquitetura.md), seções 5 e 7.
+
+| ID | Decisão arquitetural | Situação na Sprint 6 |
+| :---- | :---- | :---- |
+| RNF-01 | DA-02 — frontend HTML/CSS servido pelo próprio backend | Parcial: responsividade e acessibilidade ainda não auditadas (Lighthouse previsto para a Sprint 7). |
+| RNF-02 | DA-03 — Supabase Auth acessado só pelo backend; DA-04 — segredos em variáveis de ambiente; DA-06 — teste garante que o frontend não contém chaves nem acessa o Supabase | Parcial: o hash da senha é feito pelo Supabase Auth (bcrypt). A proteção de rotas privadas por JWT **ainda não existe** (débito T-08 no backlog). |
+| RNF-03 | DA-01 — monolito em camadas, sem chamadas de rede internas | Ainda não verificável: a listagem de questões não foi implementada. |
+| RNF-04 | Regra no domínio (`validarUpload`); a rota de upload será um módulo em `src/rotas/` | Parcial: regra implementada e testada; rota e armazenamento pendentes. |
+
 ## **5\. Regras de negócio**
 
 | ID | Regra | Origem/justificativa | Requisitos afetados |

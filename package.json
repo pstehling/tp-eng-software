@@ -1,0 +1,11 @@
+{
+  "name": "tp-eng-software",
+  "private": true,
+  "description": "Atalhos para executar a aplicação While(estuda) a partir da raiz do repositório. O código e as dependências ficam em src/ (ver docs/arquitetura/arquitetura.md, seção 7).",
+  "scripts": {
+    "instalar": "npm install --prefix src",
+    "start": "npm start --prefix src",
+    "dev": "npm run dev --prefix src",
+    "test": "npm test --prefix src"
+  }
+}

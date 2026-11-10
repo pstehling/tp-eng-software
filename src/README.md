@@ -47,13 +47,21 @@ npm run dev
 
 ```text
 src/
-├── server.js              # ponto de entrada do backend (Express) e endpoints da API
+├── server.js              # ponto de entrada: só inicia o servidor HTTP
+├── app.js                 # montagem da aplicação: estáticos, rotas, serviços externos, 404 e erros
+├── config.js              # leitura das variáveis de ambiente (.env)
+├── rotas/                 # camada de apresentação da API (ver docs/arquitetura/arquitetura.md)
+│   ├── status.js          # GET /api/status
+│   └── autenticacao.js    # cadastro, login, recuperação e redefinição de senha — RF-01..RF-03
 ├── models/                # modelos de domínio (ver docs/modelagem/modelagem.md)
 │   ├── usuario.js         # Usuario, TokenVerificacao — RF-01, RF-02, RF-03, RN-01..RN-03
 │   ├── questao.js         # Materia, Topico, Questao, Alternativa, RespostaQuestao — RF-04, RF-06..RF-09
 │   ├── conversa.js        # ConversaIA, MensagemIA — RF-10, RN-05
 │   ├── materiais.js       # ItemDoRepositorio, Pasta, Arquivo, Anotacao, validarUpload — RF-11, RNF-04, RN-04
 │   └── index.js
+├── servicos/              # padrão Adapter (ver docs/padroes/padroes-de-projeto.md, PP-01)
+│   ├── servico-autenticacao.js     # ServicoAutenticacao: interface usada pelas rotas — RF-01..RF-03, RN-03
+│   └── adaptador-supabase-auth.js  # AdaptadorSupabaseAuth: único arquivo que conhece o Supabase Auth
 ├── package.json
 └── public/                # frontend estático servido pelo Express
     ├── index.html

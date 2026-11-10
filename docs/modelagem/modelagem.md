@@ -231,8 +231,9 @@ As principais decisões são: utilizar uma mensagem genérica para falhas de log
 sequenceDiagram
     actor E as Estudante
     participant UI as Frontend (cadastro/ e login/)
-    participant API as Backend (server.js)
+    participant API as Backend (rotas/autenticacao.js)
     participant M as Usuario (models/usuario.js)
+    participant AD as AdaptadorSupabaseAuth (servicos/)
     participant AUTH as Supabase Auth
 
     E->>UI: Preenche nome, e-mail e senha
@@ -243,13 +244,16 @@ sequenceDiagram
         M-->>API: erros[]
         API-->>UI: 400 + mensagens
     else Dados válidos
-        API->>AUTH: signUp(email, senha)
+        API->>AD: cadastrar(nome, email, senha)
+        AD->>AUTH: signUp(email, password)
         alt E-mail já cadastrado
-            AUTH-->>API: erro "already registered"
+            AUTH-->>AD: erro code "user_already_exists"
+            AD-->>API: motivo EMAIL_JA_CADASTRADO
             API-->>UI: 409 e-mail já cadastrado
         else Conta criada como PENDENTE_VERIFICACAO
             AUTH->>AUTH: Gera o hash da senha
             AUTH-->>E: E-mail com link de verificação
+            AD-->>API: sucesso
             API-->>UI: 201 verifique seu e-mail
         end
     end
@@ -259,18 +263,24 @@ sequenceDiagram
 
     E->>UI: E-mail + senha
     UI->>API: POST /api/login
-    API->>AUTH: signInWithPassword()
+    API->>AD: entrar(email, senha)
+    AD->>AUTH: signInWithPassword(email, password)
 
     alt Conta ainda pendente
+        AD-->>API: motivo EMAIL_NAO_CONFIRMADO
         API-->>UI: 403 confirme seu e-mail
     else Credenciais inválidas
+        AD-->>API: motivo CREDENCIAIS_INVALIDAS
         API-->>UI: 401 mensagem genérica
     else Autenticação válida
+        AD-->>API: sucesso
         API-->>UI: 200 + redirecionamento (sessão JWT gerida pelo Supabase)
     end
 ```
 
 **Descrição e decisões representadas:** o cadastro só chega ao serviço de autenticação depois de passar por `Usuario.validarCadastro()` (RN-01 e regra de senha); caso contrário, o backend responde `400` sem chamar o Supabase. A conta é criada como `PENDENTE_VERIFICACAO` e só passa a `ATIVO` com o token do e-mail. No login, a conta pendente recebe `403` com orientação para confirmar o e-mail, e credenciais inválidas recebem `401` com mensagem genérica (US-01, critério 2). Em relação à primeira versão do modelo, os endpoints propostos (`/api/auth/...`) foram substituídos pelos efetivamente implementados (`/api/cadastro`, `/api/login`, `/api/recuperar-senha`, `/api/salvar-nova-senha`), e o caso "conta pendente" foi separado de "credenciais inválidas" por ter tratamento diferente no código. O comportamento está coberto por [`tests/auth.test.js`](../../tests/auth.test.js).
+
+**Atualização da Sprint 5 (padrão Adapter, PP-01):** o backend deixou de chamar o Supabase diretamente. As rotas usam a interface `ServicoAutenticacao` ([`src/servicos/servico-autenticacao.js`](../../src/servicos/servico-autenticacao.js)), e o participante `AdaptadorSupabaseAuth` ([`src/servicos/adaptador-supabase-auth.js`](../../src/servicos/adaptador-supabase-auth.js)) traduz as chamadas e os erros do Supabase para motivos do domínio. Os casos "e-mail já cadastrado" e "conta pendente" passaram a ser identificados pelo código do erro (`user_already_exists`/`email_exists` e `email_not_confirmed`), e não pelo texto da mensagem. Os status HTTP do fluxo não mudaram. Justificativa em [`docs/padroes/padroes-de-projeto.md`](../padroes/padroes-de-projeto.md); testes em [`tests/adaptador-autenticacao.test.js`](../../tests/adaptador-autenticacao.test.js). A imagem `imagens/03-sequencia-cadastro-login.png` precisa ser regenerada a partir do `.mmd` atualizado.
 
 ---
 
@@ -401,7 +411,7 @@ stateDiagram-v2
 | RN-03     | `Usuario.status` / `TokenVerificacao`                  | Conta pendente ou ativa                                                   | [`src/models/usuario.js`](../../src/models/usuario.js) |
 | RN-04     | `ItemDoRepositorio.acessivelPor()`                     | Acesso aos materiais somente pelo proprietário                            | [`src/models/materiais.js`](../../src/models/materiais.js) |
 | RN-05     | `ConversaIA`                                           | Comunicação com IA realizada pelo backend                                 | [`src/models/conversa.js`](../../src/models/conversa.js) |
-| RNF-02    | Fluxo de cadastro/login                                | Hash de senha e JWT tratados na camada de serviço (Supabase Auth)         | [`src/server.js`](../../src/server.js) |
+| RNF-02    | Fluxo de cadastro/login                                | Hash de senha e JWT tratados na camada de serviço (Supabase Auth)         | [`src/servicos/`](../../src/servicos/) |
 | RNF-03    | `Questao.filtrar()`                                    | Busca e filtragem de questões                                             | [`src/models/questao.js`](../../src/models/questao.js) |
 | RNF-04    | `validarUpload()`                                      | Formatos e limite de tamanho dos arquivos                                 | [`src/models/materiais.js`](../../src/models/materiais.js) |
 
@@ -426,7 +436,10 @@ stateDiagram-v2
 | `Anotacao`          | [`src/models/materiais.js`](../../src/models/materiais.js) | Representa anotações do usuário                                                    |
 | Validação de upload | [`src/models/materiais.js`](../../src/models/materiais.js) | Implementa as regras de formato, tamanho e acesso                                  |
 | Testes dos modelos  | [`tests/models.test.js`](../../tests/models.test.js) | Verificação automatizada dos modelos e regras                                      |
-| Endpoints do fluxo 4.1 | [`src/server.js`](../../src/server.js) | `/api/cadastro`, `/api/login`, `/api/recuperar-senha` e `/api/salvar-nova-senha`, aplicando as regras de `Usuario` |
+| Endpoints do fluxo 4.1 | [`src/rotas/autenticacao.js`](../../src/rotas/autenticacao.js) (até a Sprint 5, em `src/server.js`) | `/api/cadastro`, `/api/login`, `/api/recuperar-senha` e `/api/salvar-nova-senha`, aplicando as regras de `Usuario` |
+| `ServicoAutenticacao` (fluxo 4.1, Sprint 5) | [`src/servicos/servico-autenticacao.js`](../../src/servicos/servico-autenticacao.js) | Interface usada pelas rotas e motivos de falha do domínio (padrão Adapter, papel Target) |
+| `AdaptadorSupabaseAuth` (fluxo 4.1, Sprint 5) | [`src/servicos/adaptador-supabase-auth.js`](../../src/servicos/adaptador-supabase-auth.js) | Único ponto do backend que conhece o Supabase Auth (papel Adapter) |
+| Testes do adaptador | [`tests/adaptador-autenticacao.test.js`](../../tests/adaptador-autenticacao.test.js) | Tradução de erros por código e rotas com outra implementação da interface |
 | Telas do fluxo 4.1 | [`cadastro/`](../../src/public/cadastro/), [`login/`](../../src/public/login/), [`recuperar-senha/`](../../src/public/recuperar-senha/) em `src/public/` | Formulários que chamam os endpoints acima |
 | Testes do fluxo 4.1 | [`tests/auth.test.js`](../../tests/auth.test.js) | Cadastro, e-mail repetido, conta pendente, login e recuperação (Supabase simulado) |
 
@@ -469,6 +482,8 @@ stateDiagram-v2
 | Sprint 3 | Dúvida com IA                  | Representar a integração com o serviço externo              | [`src/models/conversa.js`](../../src/models/conversa.js) |
 | Sprint 3 | Upload de materiais            | Formalizar validações de formato, tamanho e acesso          | [`src/models/materiais.js`](../../src/models/materiais.js) |
 | Sprint 3 | Estados do usuário             | Representar o ciclo de vida da conta                        | [`src/models/usuario.js`](../../src/models/usuario.js) |
+| Sprint 5 | Cadastro, verificação e login  | Participante `AdaptadorSupabaseAuth` incluído (padrão Adapter, PP-01) | [`docs/padroes/padroes-de-projeto.md`](../padroes/padroes-de-projeto.md) |
+| Sprint 6 | Cadastro, verificação e login; correspondência modelo × código | Rotas movidas de `server.js` para `src/rotas/autenticacao.js` na reorganização arquitetural; o fluxo e as respostas não mudaram | [`docs/arquitetura/arquitetura.md`](../arquitetura/arquitetura.md) |
 
 > **Evidências no GitHub:** primeira versão deste documento no commit [`e6568f4`](https://github.com/pstehling/tp-eng-software/commit/e6568f4149376cc1b806b544cad4f6cb82fb204e); implementação do fluxo 4.1 no commit [`aeaabd1`](https://github.com/pstehling/tp-eng-software/commit/aeaabd13d4cee5bbfd09e58ad7c8888ca1a856ca) ([PR #15](https://github.com/pstehling/tp-eng-software/pull/15)); modelos de domínio, testes e imagens dos diagramas na branch `sprint-03` (ver [`docs/sprints/sprint-03.md`](../sprints/sprint-03.md)).
 
