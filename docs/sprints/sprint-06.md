@@ -3,7 +3,7 @@
 - **Data de entrega:** 09/11/2026
 - **Pontuação:** 2,5 pontos
 - **Tag obrigatória:** `sprint-06`
-- **Responsável por conferir este arquivo:** `[PREENCHER]`
+- **Responsável por conferir este arquivo:** @pstehling
 
 ## 1. Pergunta que esta sprint deve responder
 
@@ -13,7 +13,7 @@
 
 **Objetivo planejado:** documentar a organização global da aplicação (componentes, comunicação, tecnologias, decisões e implantação), relacionar os requisitos não funcionais às decisões e deixar o código organizado de acordo com essa arquitetura.
 
-**Resultado efetivamente alcançado:** criado `docs/arquitetura/arquitetura.md` com diagramas de contexto, de componentes e de implantação, contrato da API, seis decisões arquiteturais em formato ADR (DA-01 a DA-06), avaliação dos estilos do cap. 7 (camadas, MVC, microsserviços, filas, pub/sub, pipes e filtros, P2P), relação RNF × decisões e riscos. O servidor, que estava inteiro em `src/server.js`, foi reorganizado em cliente/servidor de três camadas com MVC Web no servidor (`config.js`, `app.js`, `rotas/`, `servicos/`, `models/`), e as regras de dependência entre camadas passaram a ser verificadas por testes automatizados (DA-06). Ganhou tratamento centralizado de erros, que impede que uma exceção derrube o servidor, e passou a poder ser executado a partir da raiz do repositório. Os 45 testes anteriores passam sem alteração; 6 novos verificam a comunicação entre as partes e 7 verificam as regras de dependência (58/58). A análise também revelou que a proteção de rotas privadas por JWT (RNF-02) ainda não existe; ela foi registrada como débito T-08.
+**Resultado efetivamente alcançado:** criado `docs/arquitetura/arquitetura.md` com diagramas de contexto, de componentes e de implantação, contrato da API, seis decisões arquiteturais implementadas em formato ADR (DA-01 a DA-06) e duas decididas para as próximas sprints (DA-07, persistência no Supabase; DA-08, publicação no Render), avaliação dos estilos do cap. 7 (camadas, MVC, microsserviços, filas, pub/sub, pipes e filtros, P2P), relação RNF × decisões e riscos. O servidor, que estava inteiro em `src/server.js`, foi reorganizado em cliente/servidor de três camadas com MVC Web no servidor (`config.js`, `app.js`, `rotas/`, `servicos/`, `models/`), e as regras de dependência entre camadas passaram a ser verificadas por testes automatizados (DA-06). Ganhou tratamento centralizado de erros, que impede que uma exceção derrube o servidor, e passou a poder ser executado a partir da raiz do repositório. Os 45 testes anteriores passam sem alteração; 6 novos verificam a comunicação entre as partes e 7 verificam as regras de dependência (58/58). A análise também revelou que a proteção de rotas privadas por JWT (RNF-02) ainda não existe; ela foi registrada como débito T-08.
 
 ## 3. Checklist do artefato central — 0,75 ponto
 
@@ -78,16 +78,16 @@ npm start                      # http://localhost:3000
 | Issue | Descrição | Responsável | Critério de aceitação/conclusão | Situação |
 |---|---|---|---|---|
 | `[#XX]` | T-07 — Documentar a arquitetura e reorganizar o backend em camadas | `[PREENCHER]` | `arquitetura.md` com todos os itens do regulamento; cada componente do diagrama ligado a um arquivo real; testes anteriores passando sem alteração | Concluída |
-| `[#XX]` | T-08 — Proteger rotas privadas com JWT (RNF-02) | `[PREENCHER]` | `[PREENCHER]` | Pendente (débito registrado) |
-| `[#XX]` | T-10 — Publicar a aplicação | `[PREENCHER]` | `[PREENCHER]` | Pendente |
-| `[#XX]` | T-11 — Retirar `src/.env` do git e gerar novas chaves | `[PREENCHER]` | `[PREENCHER]` | Pendente |
+| `[#XX]` | T-08 — Proteger rotas privadas com JWT (RNF-02) | `[PREENCHER]` | Rota privada sem token recebe `401`; com token válido responde normalmente; teste de integração cobrindo os dois casos | Pendente — prioridade Alta, Sprint 7 |
+| `[#XX]` | T-10 — Publicar a aplicação | `[PREENCHER]` | URL pública responde `/api/status` com `"autenticacao": "configurado"`; cadastro, confirmação e login funcionam nela; URL registrada no `README.md` | Pendente — prioridade Média, Render (DA-08) |
+| `[#XX]` | T-11 — Retirar `src/.env` do git e gerar novas chaves | `[PREENCHER]` | `git rm --cached src/.env` enviado; chaves novas geradas e distribuídas fora do GitHub; aplicação funcionando com elas | Pendente — prioridade Alta, Sprint 7 |
 
 ### Acompanhamento
 
 - **GitHub Project:** `[link filtrado ou visão da sprint]`
-- **Reuniões/decisões:** `[links para docs/reunioes/]`
+- **Reuniões/decisões:** [decisões de encerramento da Sprint 6 (09/11/2026)](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/reunioes/2026-11-09-decisoes-sprint-06.md) — priorização de T-06 e T-08 a T-11, persistência (DA-07) e hospedagem (DA-08). Registro feito pelo Scrum Master, sem reunião do grupo, pendente de validação na Sprint 7.
 - **Impedimentos:** `[PREENCHER]`
-- **Mudanças de escopo:** `[PREENCHER]` — observação: T-08 a T-11 foram identificados durante a sprint e registrados no backlog, sem implementação.
+- **Mudanças de escopo:** T-08 a T-11 foram identificados durante a sprint e registrados no backlog, sem implementação; T-11 e T-08 foram priorizados para a Sprint 7.
 
 ## 6. GitHub, documentação e rastreabilidade — 0,50 ponto
 
@@ -119,9 +119,9 @@ npm start                      # http://localhost:3000
 
 ## 8. Retrospectiva e próxima sprint
 
-- **Funcionou bem:** `[PREENCHER]`
-- **Precisa melhorar:** `[PREENCHER]`
-- **Ação concreta para a próxima sprint:** `[PREENCHER]`
+- **Funcionou bem:** os testes automatizados garantiram que a reorganização do servidor não quebrou nada: os 45 testes anteriores continuaram passando sem alteração, e o total foi para 58.
+- **Precisa melhorar:** tarefas foram feitas antes de existir a Issue correspondente, e o trabalho ficou concentrado no fim do prazo.
+- **Ação concreta para a próxima sprint:** criar a Issue, com responsável e critério de aceitação, no início da Sprint 7, antes de começar cada tarefa.
 
 ## 9. O que não será considerado suficiente
 
