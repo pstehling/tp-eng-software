@@ -94,8 +94,8 @@ npm start                      # http://localhost:3000
 
 | Tipo de evidência | Link | O que comprova |
 |---|---|---|
-| Issue | `[link]` | Tarefa T-07 (arquitetura e reorganização) |
-| Pull Request | `[link]` | Revisão e integração da branch `sprint-06` |
+| Issue | `https://github.com/pstehling/tp-eng-software/issues/26` | Tarefa T-08 (arquitetura e reorganização) |
+| Pull Request | `https://github.com/pstehling/tp-eng-software/pull/28` | Revisão e integração da branch `sprint-06` |
 | Commit | `[link]` | Reorganização do backend e documentação da arquitetura |
 | Código/arquivo | [`src/app.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/src/app.js), [`src/rotas/`](https://github.com/pstehling/tp-eng-software/tree/sprint-06/src/rotas) · [antes (`server.js` em `53f0ae0`)](https://github.com/pstehling/tp-eng-software/blob/53f0ae07dcdf9502837b602c08c7687af18d127d/src/server.js) | Código organizado conforme a arquitetura e estado anterior |
 | Teste/captura/relatório | [`tests/arquitetura.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/tests/arquitetura.test.js), [`tests/regras-arquitetura.test.js`](https://github.com/pstehling/tp-eng-software/blob/sprint-06/tests/regras-arquitetura.test.js), [saída antes](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/sprint-06-testes-antes.txt), [saída depois](https://github.com/pstehling/tp-eng-software/blob/sprint-06/docs/evidencias/sprint-06-testes-depois.txt) | Comportamento preservado (45/45 → 58/58) e regras de arquitetura verificadas |
