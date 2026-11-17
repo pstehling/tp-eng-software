@@ -25,7 +25,12 @@ function obterSupabase() {
   if (supabaseCliente) return supabaseCliente;
   const { url, chaveAnonima } = config.supabase;
   if (!url || !chaveAnonima) return null;
-  supabaseCliente = createClient(url, chaveAnonima);
+  // Para ambientes Node.js < 22 sem WebSocket nativo (ex.: Node 20 no CI),
+  // fornecemos um transporte seguro para o Realtime, já que a aplicação utiliza apenas Supabase Auth.
+  const opcoes = typeof WebSocket === 'undefined'
+    ? { realtime: { transport: class StubWebSocket {} } }
+    : {};
+  supabaseCliente = createClient(url, chaveAnonima, opcoes);
   return supabaseCliente;
 }
 
