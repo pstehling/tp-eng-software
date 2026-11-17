@@ -72,7 +72,8 @@ Como *estudante cadastrado*, quero *acessar a plataforma informando e-mail e sen
 *Critérios de aceitação:*
 
 1. *Dado que* o usuário informa e-mail e senha válidos na tela de login, *quando* clica no botão "Entrar", *então* o sistema autentica a sessão e o redireciona para a tela inicial.  
-2. *Dado que* o usuário insere credenciais incorretas, *quando* tenta realizar o login, *então* o sistema exibe uma mensagem de erro genérica sem informar se o erro foi no e-mail ou na senha.
+2. *Dado que* o usuário insere credenciais incorretas, *quando* tenta realizar o login, *então* o sistema exibe uma mensagem de erro genérica sem informar se o erro foi no e-mail ou na senha.  
+3. *Dado que* ocorre falha de comunicação ou indisponibilidade no provedor externo de autenticação (R-01, T-06), *quando* o usuário tenta logar, *então* o sistema informa que o serviço está temporariamente indisponível (HTTP 503), sem mascarar a falha como erro de credencial.
 
 *Issue:* \#01
 
@@ -85,7 +86,8 @@ Como *novo usuário*, quero *criar minha conta e confirmar meu e-mail*, para *te
 *Critérios de aceitação:*
 
 1. *Dado que* o novo usuário preenche todos os campos obrigatórios e informa um e-mail institucional inédito, *quando* submete o formulário de cadastro, *então* o sistema cria a conta e envia um link de verificação para a caixa de entrada do usuário.  
-2. *Dado que* o usuário tenta utilizar um e-mail já existente na base de dados, *quando* tenta concluir o cadastro, *então* o sistema bloqueia o registro e exibe um aviso claro.
+2. *Dado que* o usuário tenta utilizar um e-mail já existente na base de dados, *quando* tenta concluir o cadastro, *então* o sistema bloqueia o registro e exibe um aviso claro (HTTP 409).  
+3. *Dado que* o usuário tenta utilizar um e-mail fora dos domínios institucionais permitidos (RN-01), *quando* tenta se cadastrar, *então* o sistema bloqueia o cadastro localmente com mensagem clara (HTTP 400) antes de acionar o provedor externo.
 
 *Issue:* \#02
 
@@ -210,4 +212,5 @@ Como *estudante*, quero *organizar meus resumos, anotações e listas em pastas 
 | Sprint 3 | RF-01 / RN-01 | Esclarecido o que é "e-mail institucional": domínios `ufla.br` e `estudante.ufla.br` (configuráveis). | A modelagem precisou de uma regra verificável para `Usuario.validarCadastro()`; regra confirmada pelo grupo. | `src/models/usuario.js` |
 | Sprint 3 | RF-01 / RF-03 | Esclarecida a "senha válida": mínimo de 8 caracteres, com pelo menos uma letra e um número; a mesma regra vale para a nova senha na recuperação. | Critério necessário para validar cadastro e redefinição de senha de forma objetiva; regra confirmada pelo grupo. | `src/models/usuario.js` |
 | Sprint 3 | RF-01, RF-02, RF-03 | Situação atualizada após a implementação do cadastro, login e recuperação de senha. | Fluxo modelado em `docs/modelagem/modelagem.md` (4.1) e implementado. | [PR \#15](https://github.com/pstehling/tp-eng-software/pull/15) |
+| Sprint 7 | RF-01, RF-02, RF-03 | Critérios de aceitação refinados com base na estratégia de testes: especificação de falha de serviço no login (T-06 / CT-06) e validação de e-mail institucional (CT-01). | Alinhamento com a estratégia de testes da Sprint 7 e tratamento de falhas de comunicação com serviços externos. | `docs/testes/plano-de-testes.md`, Issue [#22](https://github.com/pstehling/tp-eng-software/issues/22) |
 

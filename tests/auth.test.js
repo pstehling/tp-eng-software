@@ -88,6 +88,14 @@ describe('Fluxo de autenticação', () => {
     assert.equal(dados.erro, 'E-mail ou senha incorretos.');
   });
 
+  test('falha de comunicação com o provedor no login retorna 503 (T-06 / CT-06)', async () => {
+    app.locals.supabase = supabaseFalso({ loginErro: { status: 503, message: 'FetchError: Failed to fetch' } });
+    const { status, dados } = await post('/api/login', { email: 'ana@estudante.ufla.br', senha: 'senhaSegura1' });
+    assert.equal(status, 503);
+    assert.equal(dados.sucesso, false);
+    assert.match(dados.erro, /temporariamente indisponível/i);
+  });
+
   test('login válido redireciona o usuário (US-01, critério 1)', async () => {
     const { status, dados } = await post('/api/login', { email: 'ana@estudante.ufla.br', senha: 'senhaSegura1' });
     assert.equal(status, 200);

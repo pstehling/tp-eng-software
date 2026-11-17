@@ -2,7 +2,7 @@
 
 > O backlog operacional deve ser mantido no **GitHub Project**, por meio de Issues. Este documento explica a convenção adotada e apresenta uma visão rastreável dos itens.
 >
-> **Última atualização:** Sprint 6 — 08/11/2026.
+> **Última atualização:** Sprint 7 — 16/11/2026.
 
 ## 1. Link do GitHub Project
 
@@ -54,21 +54,22 @@ Essa ordem é a mesma refletida na coluna "Prioridade" de `docs/requisitos/requi
 | `T-03` | — | Tarefa técnica | Integrar `Usuario` ao fluxo de cadastro/login e corrigir dependências e rotas do fluxo de autenticação | Alta | RF-01, RF-02, RF-03, RN-01 | 3 | Grupo | **Concluído** |
 | `T-04` | — | Documentação | Versionar arquivos-fonte (`.mmd`) e imagens (`.png`) dos diagramas em `docs/modelagem/imagens/` | Média | — | 3 | Grupo | **Concluído** |
 | `T-05` | [`#21`](https://github.com/pstehling/tp-eng-software/issues/21) | Tarefa técnica | Aplicar o padrão Adapter à autenticação: isolar o Supabase Auth atrás de `ServicoAutenticacao`, identificar erros por código e validar com testes (PP-01, DP-AUT) | Alta | RF-01, RF-02, RF-03, RN-03 | 5 | `[PREENCHER]` | **Concluído** (45 testes aprovados — ver `docs/padroes/padroes-de-projeto.md`) |
-| `T-06` | [`#22`](https://github.com/pstehling/tp-eng-software/issues/22) | Débito técnico | Diferenciar falha de comunicação com o provedor de "credenciais inválidas" no login (hoje ambas respondem `401`); a mudança fica restrita a `AdaptadorSupabaseAuth` | `[PREENCHER]` | RF-02 | — | `[PREENCHER]` | Planejado |
+| `T-06` | [`#22`](https://github.com/pstehling/tp-eng-software/issues/22) | Débito técnico | Diferenciar falha de comunicação com o provedor de "credenciais inválidas" no login (hoje ambas respondem `401`); a mudança fica restrita a `AdaptadorSupabaseAuth` | Média | RF-02 | 7 | @gabrielrooocha | **Concluído** (corrigido e validado no CT-06 na Sprint 7 — ver `docs/testes/plano-de-testes.md`) |
 | `T-07` | [`#23`](https://github.com/pstehling/tp-eng-software/issues/23) | Tarefa técnica | Documentar a arquitetura (`docs/arquitetura/arquitetura.md`) e reorganizar o backend em camadas: `config.js`, `app.js`, `rotas/` e `server.js` só para iniciar; tratamento centralizado de erros; testes automatizados das regras de dependência entre camadas; execução a partir da raiz | Alta | RNF-01 a RNF-04 | 6 | `[PREENCHER]` | **Concluído** (58 testes aprovados — ver `docs/arquitetura/arquitetura.md`, seção 11) |
 | `T-08` | [`#24`](https://github.com/pstehling/tp-eng-software/issues/24) | Débito técnico (arquitetural) | Proteger rotas privadas com o JWT do Supabase (RNF-02): o login deve devolver a sessão, o frontend deve enviá-la e um middleware em `src/rotas/` deve responder `401` sem token válido | `[PREENCHER]` | RNF-02, RF-02, RN-04 | — | `[PREENCHER]` | Planejado (risco R-03) |
 | `T-09` | [`#25`](https://github.com/pstehling/tp-eng-software/issues/25) | Débito técnico (arquitetural) | Definir e implementar a persistência de questões, respostas e materiais, atrás de uma interface em `src/servicos/` | `[PREENCHER]` | RF-04 a RF-11 | — | `[PREENCHER]` | Planejado (risco R-04) |
 | `T-10` | [`#26`](https://github.com/pstehling/tp-eng-software/issues/26) | Tarefa técnica | Publicar a aplicação em um serviço de hospedagem, configurar `APP_URL` e as URLs de redirecionamento no Supabase | `[PREENCHER]` | — | — | `[PREENCHER]` | Planejado (risco R-05) |
 | `T-11` | [`#27`](https://github.com/pstehling/tp-eng-software/issues/27) | Débito técnico (segurança) | Retirar `src/.env` do versionamento e gerar novas chaves no Supabase (as atuais estão no histórico do git desde o commit `aeaabd1`) | `[PREENCHER]` | RNF-02 | — | `[PREENCHER]` | Planejado (risco R-02) |
+| `T-12` | [`#30`](https://github.com/pstehling/tp-eng-software/issues/30) | Tarefa técnica / Documentação | Planejar e executar a estratégia de testes da aplicação: plano de testes (`docs/testes/plano-de-testes.md`), 15 casos de teste formais (CT-01 a CT-15), 60 testes automatizados e evidências de execução | Alta | RF-01 a RF-11, RNF-01 a RNF-04 | 7 | @gabrielrooocha | **Concluído** (60 testes aprovados — ver `docs/testes/evidencias-testes.md`) |
 
-Isso totaliza **21 itens** (11 tarefas técnicas/documentação/débito + 10 histórias). Os itens T-02 a T-04 surgiram durante a modelagem da Sprint 3; T-05 e T-06, na Sprint 5; T-07 a T-11, na análise arquitetural da Sprint 6 (riscos R-02 a R-05 em `docs/arquitetura/arquitetura.md`).
+Isso totaliza **22 itens** (12 tarefas técnicas/documentação/débito + 10 histórias). Os itens T-02 a T-04 surgiram durante a modelagem da Sprint 3; T-05 e T-06, na Sprint 5; T-07 a T-11, na análise arquitetural da Sprint 6; T-12, na estratégia de testes da Sprint 7.
 
-### 4.1 Itens priorizados para a sprint corrente (Sprint 6)
+### 4.1 Itens priorizados para a sprint corrente (Sprint 7)
 
 | Item | Motivo da prioridade | Situação |
 |---|---|---|
-| `T-07` — arquitetura e reorganização do backend | Entrega central da Sprint 6 | Concluído |
-| `[PREENCHER — itens escolhidos pelo grupo entre T-06, T-08, T-10 e T-11]` | `[PREENCHER]` | `[PREENCHER]` |
+| `T-12` — estratégia e execução de testes da aplicação | Entrega central da Sprint 7: plano de testes e primeiras execuções verificáveis | Concluído |
+| `T-06` — diferenciação de falha de rede e credenciais inválidas | Defeito priorizado para correção durante a execução dos testes de autenticação (CT-06) | Concluído |
 
 ## 5. Definition of Ready
 
@@ -100,3 +101,4 @@ Um item está concluído quando:
 | Sprint 3 | Criadas as tarefas T-02 a T-04; US-01 e US-02 passaram a "Implementado". | A modelagem mostrou que a documentação citava `src/models/` e `tests/models.test.js`, que ainda não existiam, e que o fluxo de autenticação precisava de ajustes (dependências ausentes no `package.json`, rota de recuperação de senha divergente entre frontend e backend). | `docs/modelagem/modelagem.md`, [PR #15](https://github.com/pstehling/tp-eng-software/pull/15) |
 | Sprint 5 | Criadas a tarefa T-05 (concluída) e o débito técnico T-06. | A análise de padrões encontrou as rotas de autenticação acopladas ao SDK do Supabase e dependentes do texto das mensagens de erro (T-05). Ao aplicar o Adapter, verificou-se que uma falha de rede no login é respondida como credenciais inválidas; o comportamento foi mantido para não alterar o contrato nesta sprint e registrado como T-06. | `docs/padroes/padroes-de-projeto.md`, `docs/projeto/decisoes-de-projeto.md` (DP-AUT) |
 | Sprint 6 | Criadas a tarefa T-07 (concluída) e os débitos T-08 a T-11. | A documentação da arquitetura confrontou os RNF com o código: a proteção de rotas por JWT (RNF-02) não existe (T-08), a persistência de questões e materiais não está definida (T-09), a aplicação não está publicada (T-10) e as chaves do Supabase estão versionadas (T-11). | `docs/arquitetura/arquitetura.md` (seções 7 e 9) |
+| Sprint 7 | Criada a tarefa T-12 (concluída) e concluído o débito/defeito T-06. | A estratégia de testes exigiu formalização do plano de testes, mapeamento dos casos CT-01 a CT-15 e primeiras execuções verificáveis. Durante os testes de tolerância a falhas do fluxo de autenticação, o defeito T-06 foi reproduzido, corrigido no adaptador e na rota de login, e retestado com sucesso. | `docs/testes/plano-de-testes.md`, `docs/testes/evidencias-testes.md`, [Issue #22](https://github.com/pstehling/tp-eng-software/issues/22), [Issue #30](https://github.com/pstehling/tp-eng-software/issues/30) |

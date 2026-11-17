@@ -14,6 +14,7 @@ const {
 // como alternativa quando o erro não traz código.
 const CODIGOS_EMAIL_JA_CADASTRADO = ['user_already_exists', 'email_exists'];
 const CODIGO_EMAIL_NAO_CONFIRMADO = 'email_not_confirmed';
+const CODIGOS_CREDENCIAIS_INVALIDAS = ['invalid_credentials', 'invalid_grant'];
 
 function emailJaCadastrado(erro) {
   return CODIGOS_EMAIL_JA_CADASTRADO.includes(erro.code) || /already registered/i.test(erro.message);
@@ -29,6 +30,10 @@ function usuarioFicticio(dados) {
 
 function emailNaoConfirmado(erro) {
   return erro.code === CODIGO_EMAIL_NAO_CONFIRMADO || erro.message === 'Email not confirmed';
+}
+
+function credenciaisInvalidas(erro) {
+  return CODIGOS_CREDENCIAIS_INVALIDAS.includes(erro?.code) || /invalid.*credentials/i.test(erro?.message);
 }
 
 class AdaptadorSupabaseAuth extends ServicoAutenticacao {
@@ -57,7 +62,8 @@ class AdaptadorSupabaseAuth extends ServicoAutenticacao {
     const { error } = await this.auth.signInWithPassword({ email, password: senha });
     if (!error) return sucesso();
     if (emailNaoConfirmado(error)) return falha(MOTIVOS.EMAIL_NAO_CONFIRMADO);
-    return falha(MOTIVOS.CREDENCIAIS_INVALIDAS, error.message);
+    if (credenciaisInvalidas(error)) return falha(MOTIVOS.CREDENCIAIS_INVALIDAS, error.message);
+    return falha(MOTIVOS.ERRO_SERVICO, error.message);
   }
 
   async solicitarRecuperacaoSenha({ email, urlRedefinicao }) {

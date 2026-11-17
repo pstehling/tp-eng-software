@@ -137,10 +137,10 @@ Os comandos abaixo funcionam **na raiz do repositório** (desde a Sprint 6). Den
 npm run instalar             # instala as dependências de src/
 cp src/.env.example src/.env # preencha SUPABASE_URL e SUPABASE_ANON_KEY
 npm start                    # http://localhost:3000
-npm test                     # testes automatizados em tests/
+npm test                     # 60 testes automatizados em tests/ (ver docs/testes/plano-de-testes.md)
 ```
 
-Para conferir a configuração, acesse `http://localhost:3000/api/status`: o campo `servicos.autenticacao` deve ser `"configurado"`. Sem o `.env`, as páginas abrem normalmente, mas cadastro e login respondem que o serviço de autenticação não está configurado. Detalhes em [`src/README.md`](src/README.md) e na seção 8 de [`docs/arquitetura/arquitetura.md`](docs/arquitetura/arquitetura.md).
+Para conferir a configuração, acesse `http://localhost:3000/api/status`: o campo `servicos.autenticacao` deve ser `"configurado"`. Sem o `.env`, as páginas abrem normalmente, mas cadastro e login respondem que o serviço de autenticação não está configurado. A suíte completa de testes roda sem internet nem `.env` e é explicada em [`tests/README.md`](tests/README.md), [`docs/testes/plano-de-testes.md`](docs/testes/plano-de-testes.md) e [`docs/testes/evidencias-testes.md`](docs/testes/evidencias-testes.md). Detalhes em [`src/README.md`](src/README.md) e na seção 8 de [`docs/arquitetura/arquitetura.md`](docs/arquitetura/arquitetura.md).
 
 ## 8. Regra de ouro da rastreabilidade
 

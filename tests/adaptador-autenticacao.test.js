@@ -90,6 +90,14 @@ describe('AdaptadorSupabaseAuth — tradução da API do Supabase', () => {
     assert.equal(resultado.motivo, MOTIVOS.CREDENCIAIS_INVALIDAS);
   });
 
+  test('falha de comunicação com o provedor no login retorna ERRO_SERVICO (T-06 / CT-06)', async () => {
+    const servico = new AdaptadorSupabaseAuth(
+      supabaseFalso({ signInWithPassword: { status: 503, message: 'FetchError: Failed to fetch' } })
+    );
+    const resultado = await servico.entrar({ email: 'a@ufla.br', senha: 'senha' });
+    assert.equal(resultado.motivo, MOTIVOS.ERRO_SERVICO);
+  });
+
   test('redefinirSenha() com token inválido não tenta atualizar a senha', async () => {
     const chamadas = [];
     const servico = new AdaptadorSupabaseAuth(

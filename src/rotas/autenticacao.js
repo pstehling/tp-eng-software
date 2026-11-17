@@ -72,6 +72,13 @@ function criarRotasAutenticacao({ obterServicoAutenticacao, urlAplicacao }) {
           erro: 'Conta não verificada. Por favor, confirme seu e-mail antes de acessar.',
         });
       }
+      // T-06 / CT-06: falha de comunicação ou indisponibilidade no provedor não pode ser mascarada como credencial errada
+      if (resultado.motivo === MOTIVOS_FALHA_AUTENTICACAO.ERRO_SERVICO) {
+        return res.status(503).json({
+          sucesso: false,
+          erro: 'Serviço de autenticação temporariamente indisponível. Tente novamente mais tarde.',
+        });
+      }
       // US-01, critério 2: mensagem genérica, sem revelar se o erro foi no e-mail ou na senha
       return res.status(401).json({ sucesso: false, erro: 'E-mail ou senha incorretos.' });
     }
