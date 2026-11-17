@@ -2,7 +2,7 @@
 
 > **Artefato central da Sprint 6.** A arquitetura descreve a organização global da aplicação, as responsabilidades das partes e suas interações.
 >
-> **Última atualização:** Sprint 6 — 08/11/2026. Base conceitual: *Engenharia de Software Moderna*, cap. 7 (Valente), e slides do cap. 7 da disciplina. Os diagramas representam o código da branch `sprint-06`; elementos ainda não implementados aparecem como **planejado**, com linha tracejada.
+> **Última atualização:** Sprint 6 — 09/11/2026. Base conceitual: *Engenharia de Software Moderna*, cap. 7 (Valente), e slides do cap. 7 da disciplina. Os diagramas representam o código da branch `sprint-06`; elementos ainda não implementados aparecem como **planejado**, com linha tracejada.
 
 ## 1. Visão geral
 
@@ -13,7 +13,7 @@ O cap. 7 apresenta duas formas complementares de definir arquitetura: (1) o **pr
 | "Caro mudar depois" — tratado aqui como arquitetura | "Barato mudar" — fica no código e em `decisoes-de-projeto.md` |
 |---|---|
 | Linguagem e plataforma do servidor (JavaScript, Node.js + Express) | Nomes de funções e variáveis |
-| Onde ficam contas e senhas (Supabase Auth) e onde ficarão questões e materiais (ainda indefinido, T-09) | Algoritmo de uma validação (ex.: regra de senha em `Usuario`) |
+| Onde ficam contas e senhas (Supabase Auth) e onde ficarão questões e materiais (PostgreSQL do Supabase, DA-07, a implementar em T-09) | Algoritmo de uma validação (ex.: regra de senha em `Usuario`) |
 | Monolito ou serviços separados (DA-01) | Texto das mensagens de erro |
 | Divisão em camadas e quem pode depender de quem (seção 3.2) | Layout e cores das páginas |
 | Formato da comunicação entre navegador e servidor (API HTTP/JSON, seção 4.2) | Organização interna de uma rota |
@@ -26,7 +26,7 @@ O cap. 7 apresenta duas formas complementares de definir arquitetura: (1) o **pr
 |---|---|---|
 | **Interface com o usuário** — roda no cliente | Páginas HTML/CSS/JS no navegador; enviam requisições e mostram as respostas | [`src/public/`](../../src/public/) |
 | **Lógica de negócio** — servidor de aplicação | Processo Node.js: controladoras (rotas), modelo (regras de domínio) e serviços | [`src/rotas/`](../../src/rotas/), [`src/models/`](../../src/models/), [`src/servicos/`](../../src/servicos/), montados em [`src/app.js`](../../src/app.js) |
-| **Dados** — à parte | Supabase Auth (contas, hash de senha, sessão, e-mails); banco de questões e materiais planejado | Serviço externo, acessado por [`src/servicos/adaptador-supabase-auth.js`](../../src/servicos/adaptador-supabase-auth.js) |
+| **Dados** — à parte | Supabase Auth (contas, hash de senha, sessão, e-mails); questões e materiais no PostgreSQL e no Storage do Supabase, planejado (DA-07) | Serviço externo, acessado por [`src/servicos/adaptador-supabase-auth.js`](../../src/servicos/adaptador-supabase-auth.js) |
 
 Na analogia do restaurante usada em aula: o navegador é o cliente no salão, o servidor é a cozinha e o Supabase é a despensa. **O cliente nunca entra na despensa: fala só com o garçom.** No código, isso significa que nenhum arquivo de `src/public/` acessa o Supabase. As páginas só chamam `/api/...`, e essa regra é verificada por teste (seção 3.2).
 
@@ -62,7 +62,7 @@ flowchart LR
     A(["Administrador<br/>(RN-02)"])
     W["<b>While(estuda)</b><br/>aplicação web<br/>Node.js + Express"]
     AUTH["Supabase Auth<br/>contas, hash de senha,<br/>sessão JWT e e-mails"]
-    DB[("Banco de dados<br/>questões e materiais<br/><i>planejado — T-09</i>")]
+    DB[("Supabase PostgreSQL + Storage<br/>questões e materiais<br/><i>planejado — DA-07, T-09</i>")]
     IA["Provedor de IA<br/>RF-10<br/><i>planejado</i>"]
     MAIL["Caixa de e-mail<br/>do estudante"]
 
@@ -80,7 +80,7 @@ flowchart LR
 - **Estudante:** usa a aplicação pelo navegador. Hoje consegue se cadastrar, confirmar o e-mail, entrar e recuperar a senha (RF-01 a RF-03).
 - **Administrador:** perfil previsto na RN-02 para povoar o banco de questões (RF-08). A regra existe no domínio (`Usuario.podeEditarBancoDeQuestoes()`), mas ainda não há tela nem rota.
 - **Supabase Auth (implementado):** guarda as contas, gera o hash das senhas, emite a sessão e envia os e-mails de confirmação e de redefinição. É acessado **somente pelo servidor**.
-- **Banco de dados (planejado):** questões, respostas e materiais (RF-04 a RF-11) ainda não são persistidos. É uma decisão "cara de mudar depois" que o grupo ainda precisa tomar (T-09).
+- **Banco de dados (planejado):** questões, respostas e materiais (RF-04 a RF-11) ainda não são persistidos. A tecnologia foi escolhida em 09/11/2026: PostgreSQL e Storage do próprio Supabase (DA-07). A implementação é o item T-09.
 - **Provedor de IA (planejado):** o chat do RF-10 ainda não foi implementado nem o provedor escolhido. A arquitetura já fixa que a chamada parte do servidor (RN-05) e quais padrões do cap. 7 serão reavaliados quando ele existir (seção 6).
 
 ---
@@ -260,7 +260,7 @@ Registradas no formato de ADR (*Architecture Decision Record*): contexto, altern
 - **Decisão:** (c). A opção (a) repetiria o mesmo código em todas as rotas; a (b) exigiria trocar uma dependência central perto do fim do semestre.
 - **Requisitos/atributos de qualidade:** disponibilidade e segurança (o cliente recebe uma mensagem genérica; o detalhe fica só no log do servidor).
 - **Consequências e trade-offs:** toda rota nova precisa usar `assincrona()`. Os erros **esperados** (credenciais inválidas, e-mail repetido etc.) continuam tratados nas próprias rotas; o tratador central cobre só o inesperado. A solução protege contra exceções no código, não contra a queda da máquina; para isso, a saída citada no cap. 7 é ter mais servidores atrás de um balanceador de carga, o que está fora do escopo atual.
-- **Evidência no repositório:** [`src/rotas/autenticacao.js#L12`](../../src/rotas/autenticacao.js#L12), [`src/app.js#L46`](../../src/app.js#L46); testes "erro inesperado no serviço vira 500 genérico e o servidor continua no ar" e "rota inexistente da API responde 404 em JSON" em [`tests/arquitetura.test.js`](../../tests/arquitetura.test.js).
+- **Evidência no repositório:** [`src/rotas/autenticacao.js#L12`](../../src/rotas/autenticacao.js#L12), [`src/app.js#L46`](../../src/app.js#L46) (404 da API), [`src/app.js#L53`](../../src/app.js#L53) (tratador de erros); testes "erro inesperado no serviço vira 500 genérico e o servidor continua no ar" e "rota inexistente da API responde 404 em JSON" em [`tests/arquitetura.test.js`](../../tests/arquitetura.test.js).
 
 ### DA-06 — Regras de arquitetura verificadas por testes automatizados
 
@@ -273,6 +273,32 @@ Registradas no formato de ADR (*Architecture Decision Record*): contexto, altern
 - **Requisitos/atributos de qualidade:** manutenibilidade; RNF-02 e RN-05 (nenhuma chave ou acesso a dados no frontend).
 - **Consequências e trade-offs:** a análise é textual (procura `require(...)` e `fetch(...)`), então não detecta dependências criadas por caminhos dinâmicos. Uma regra nova exige editar o teste. Em troca, uma violação das fronteiras aparece como teste falhando antes do merge.
 - **Evidência no repositório:** [`tests/regras-arquitetura.test.js`](../../tests/regras-arquitetura.test.js); verificação de que o teste falha com atalhos introduzidos (seção 3.2).
+
+### DA-07 — Questões, respostas e materiais no PostgreSQL do Supabase (decidida, a implementar)
+
+- **Situação:** decidida em 09/11/2026 pelo Scrum Master, **pendente de validação do grupo** ([ata](../reunioes/2026-11-09-decisoes-sprint-06.md)). Ainda não implementada (T-09).
+- **Contexto:** RF-04 a RF-11 exigem guardar questões, respostas, histórico e materiais, incluindo arquivos de até 50 MB (RNF-04). Onde os dados ficam é uma decisão "cara de mudar depois" (seção 1.1). As contas já estão no Supabase Auth.
+- **Alternativas consideradas:**
+  - (a) **PostgreSQL do mesmo projeto Supabase**, com os arquivos no **Supabase Storage**;
+  - (b) outro banco gerenciado (ex.: MongoDB Atlas): um segundo fornecedor e uma segunda credencial, e a ligação entre o usuário e os seus materiais (RN-04) ficaria dividida entre dois sistemas;
+  - (c) arquivos JSON no próprio servidor: em hospedagem gratuita o disco do servidor é apagado a cada nova implantação (DA-08), e não há controle de acesso concorrente.
+- **Decisão:** (a). O acesso será feito **só pelo servidor**, atrás de uma interface em `src/servicos/`, como na autenticação (PP-01), com uma implementação em memória para os testes. As regras de dependência da seção 3.2 continuam valendo: as rotas não poderão importar o Supabase.
+- **Requisitos/atributos de qualidade:** RNF-03 (filtro de questões feito pelo banco), RNF-04 (o Storage aceita os formatos e tamanhos exigidos), RN-04 (cada material referencia o identificador do usuário do Supabase Auth).
+- **Consequências e trade-offs:** nenhum fornecedor novo e nenhuma credencial nova. Em contrapartida, aumenta a dependência de um único serviço: se o projeto Supabase ficar fora do ar (R-01), param o login **e** as questões. O plano gratuito também tem limites de espaço, que devem ser conferidos quando os materiais forem implementados. A interface em `servicos/` mantém uma eventual troca restrita a um adaptador.
+- **Evidência no repositório:** [ata de 09/11/2026](../reunioes/2026-11-09-decisoes-sprint-06.md); item T-09 em [`docs/backlog-produto.md`](../backlog-produto.md).
+
+### DA-08 — Publicação no Render (decidida, a implementar)
+
+- **Situação:** decidida em 09/11/2026 pelo Scrum Master, **pendente de validação do grupo** ([ata](../reunioes/2026-11-09-decisoes-sprint-06.md)). Ainda não implementada (T-10).
+- **Contexto:** pela DA-01 e pela DA-02, um único processo Node.js serve as páginas e a API. Publicar exige um serviço que rode `npm start`, ofereça HTTPS e receba as variáveis da seção 8.3, sem custo.
+- **Alternativas consideradas:**
+  - (a) **Render**: plano gratuito para servidores Node.js e nova implantação a cada push no GitHub;
+  - (b) **Railway**: implantação igualmente simples, mas o plano gratuito funciona com créditos limitados;
+  - (c) hospedagem só de arquivos estáticos (ex.: GitHub Pages): não serve, porque a aplicação precisa do servidor (DA-01, RN-05).
+- **Decisão:** (a). Um único serviço web, com instalação por `npm run instalar` e execução por `npm start` na raiz do repositório.
+- **Requisitos/atributos de qualidade:** disponibilidade para a demonstração e o vídeo final; DA-04 (as variáveis são cadastradas no painel do Render, e o `.env` não vai para o servidor).
+- **Consequências e trade-offs:** sem custo e sem infraestrutura própria. No plano gratuito, o serviço "dorme" após um período sem acesso, e a primeira requisição seguinte demora bem mais que as outras. Isso afeta a medição do RNF-03 e a demonstração, então a URL deve ser aberta antes de medir ou gravar. Ao publicar, é preciso atualizar `APP_URL` e as URLs de redirecionamento no Supabase (seção 8.1).
+- **Evidência no repositório:** [ata de 09/11/2026](../reunioes/2026-11-09-decisoes-sprint-06.md); item T-10 em [`docs/backlog-produto.md`](../backlog-produto.md).
 
 ---
 
@@ -324,7 +350,7 @@ flowchart LR
     NODE -- "HTTPS" --> SB
 ```
 
-A aplicação ainda **não está publicada**: hoje ela roda na máquina de cada integrante, todos usando o mesmo projeto Supabase. A escolha da hospedagem está pendente com o grupo (T-10). Como o servidor é um único processo e serve também as páginas, a publicação exige **um único serviço** que rode `npm start` e receba as variáveis da seção 8.3. Ao publicar, é preciso:
+A aplicação ainda **não está publicada**: hoje ela roda na máquina de cada integrante, todos usando o mesmo projeto Supabase. A hospedagem escolhida é o Render (DA-08), e a publicação é o item T-10. Como o servidor é um único processo e serve também as páginas, a publicação exige **um único serviço** que rode `npm start` e receba as variáveis da seção 8.3. Ao publicar, é preciso:
 
 - cadastrar o endereço público no Supabase (*Authentication > URL Configuration*);
 - informá-lo em `APP_URL`, senão os links enviados por e-mail apontam para `localhost`.
@@ -336,7 +362,7 @@ A aplicação ainda **não está publicada**: hoje ela roda na máquina de cada 
 | Local | `npm run instalar` e depois `npm start` (na raiz do repositório) → http://localhost:3000 | Desenvolvimento e demonstração |
 | Testes automatizados | `npm test` (na raiz ou em `src/`) | Comportamento e regras de arquitetura, sem rede e sem `.env` |
 | Integração contínua | [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) | Roda os testes a cada push ou PR na `main` |
-| Publicado | **Ainda não existe** (T-10) | Demonstração para o professor e para o vídeo final |
+| Publicado | **Ainda não existe** — será no Render (DA-08, T-10) | Demonstração para o professor e para o vídeo final |
 
 ### 8.3 Instruções de execução
 
@@ -372,8 +398,8 @@ Os mesmos comandos continuam funcionando de dentro de `src/` (`npm install`, `np
 | R-01 | Indisponibilidade ou pausa do projeto Supabase (plano gratuito); já ocorreu em 26/10/2026 | Média | Alta: cadastro, login e recuperação param | Adaptador isola o fornecedor (DA-03); `/api/status` ajuda a diagnosticar; diferenciar falha de rede de credencial inválida (T-06) | T-06 |
 | R-02 | Chaves reais do Supabase versionadas em `src/.env` desde o commit `aeaabd1` | Já ocorrido | Alta: qualquer pessoa com acesso ao repositório usa o projeto | Tirar o arquivo do versionamento e gerar chaves novas no painel do Supabase | T-11 |
 | R-03 | Rotas privadas sem proteção (RNF-02 não atendido) | Alta | Alta quando houver dados pessoais (materiais, RN-04) | Middleware em `rotas/` que valide o JWT do Supabase antes das rotas privadas | T-08 |
-| R-04 | Persistência de questões e materiais indefinida (decisão "cara de mudar depois") | Alta | Média: bloqueia RF-04 a RF-11 | Decidir a tecnologia e acessá-la por uma interface em `servicos/`, como na autenticação | T-09 |
-| R-05 | Aplicação não publicada até a entrega final | Média | Média: a demonstração dependeria de uma máquina local | Escolher hospedagem e publicar antes da Sprint 8 | T-10 |
+| R-04 | Persistência de questões e materiais indefinida (decisão "cara de mudar depois") | Alta | Média: bloqueia RF-04 a RF-11 | Tecnologia decidida (DA-07); acessá-la por uma interface em `servicos/`, como na autenticação | T-09 |
+| R-05 | Aplicação não publicada até a entrega final | Média | Média: a demonstração dependeria de uma máquina local | Hospedagem escolhida (Render, DA-08); publicar antes da entrega final | T-10 |
 | R-06 | Erosão da arquitetura (bola de lama), acelerada pelo uso de IA | Média | Alta a longo prazo | Regras de dependência testadas a cada `npm test` (DA-06); revisar dependências nos PRs, e não só "se funciona" | — |
 
 ---
