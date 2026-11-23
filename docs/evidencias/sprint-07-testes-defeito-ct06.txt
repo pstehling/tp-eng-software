@@ -1,0 +1,146 @@
+# Evidência — Sprint 7 — Reprodução do defeito T-06 (Issue #22) pelo caso CT-06
+#
+# Suíte atual executada contra o código ANTERIOR à correção (commit f505890^).
+# Os 2 testes do CT-06 reprovam: o login devolvia 401 em vez de 503 (ERRO_SERVICO).
+#
+# Como reproduzir (raiz do repositório):
+#   git checkout f505890^ -- src/rotas/autenticacao.js src/servicos/adaptador-supabase-auth.js
+#   cd src && node --test --test-reporter=spec ../tests/*.test.js
+#   cd .. && git checkout HEAD -- src/rotas/autenticacao.js src/servicos/adaptador-supabase-auth.js
+#
+# Resultado: 60 testes, 58 aprovados, 2 reprovados (ambos CT-06).
+# Após a correção (commit f505890): 60 aprovados — ver sprint-07-testes-depois.txt.
+#
+▶ AdaptadorSupabaseAuth — tradução da API do Supabase
+  ✔ ServicoAutenticacao é abstrata (1.3596ms)
+  ✔ cadastrar() repassa os dados no formato do Supabase (1.3413ms)
+  ✔ e-mail repetido é reconhecido pelo código do erro, mesmo com outra mensagem (0.3739ms)
+  ✔ e-mail já confirmado é reconhecido pelo usuário fictício sem identidades (Confirm email ativo) (0.279ms)
+  ✔ conta não confirmada é reconhecida pelo código do erro (RN-03) (0.3345ms)
+  ✔ demais erros de login viram CREDENCIAIS_INVALIDAS (0.2256ms)
+  ✖ falha de comunicação com o provedor no login retorna ERRO_SERVICO (T-06 / CT-06) (1.446ms)
+  ✔ redefinirSenha() com token inválido não tenta atualizar a senha (0.3665ms)
+  ✔ redefinirSenha() usa o token de acesso quando não há token de renovação (0.275ms)
+✖ AdaptadorSupabaseAuth — tradução da API do Supabase (7.5877ms)
+▶ Rotas de autenticação com outra implementação da interface (sem Supabase)
+  ✔ cadastro e e-mail repetido (RF-01, US-02) (123.4925ms)
+  ✔ login antes e depois da confirmação do e-mail (RF-02, RN-03) (13.9874ms)
+  ✔ senha errada recebe mensagem genérica (US-01, critério 2) (8.6571ms)
+  ✔ redefinição de senha com token inválido e válido (RF-03) (9.2646ms)
+✔ Rotas de autenticação com outra implementação da interface (sem Supabase) (160.9735ms)
+▶ Comunicação entre frontend, API e serviço externo (app montado)
+  ✔ o mesmo servidor entrega as páginas do frontend (DA-02) (92.9411ms)
+  ✔ /api/status informa se o serviço de autenticação está configurado, sem expor chaves (10.7368ms)
+  ✔ rota inexistente da API responde 404 em JSON (DA-05) (4.0873ms)
+  ✔ erro inesperado no serviço vira 500 genérico e o servidor continua no ar (DA-05) (18.733ms)
+✔ Comunicação entre frontend, API e serviço externo (app montado) (133.112ms)
+▶ Camada de rotas independente da montagem da aplicação
+  ✔ as rotas de autenticação funcionam em outro app Express com o serviço passado por parâmetro (25.8163ms)
+  ✔ sem serviço configurado, as rotas respondem 503 (11.8966ms)
+✔ Camada de rotas independente da montagem da aplicação (38.2159ms)
+▶ Fluxo de autenticação
+  ✔ cadastro com e-mail não institucional é barrado antes do Supabase (RN-01) (90.3992ms)
+  ✔ cadastro válido cria a conta pendente de verificação (201) (10.6309ms)
+  ✔ e-mail já cadastrado retorna 409 (US-02, critério 2) (6.609ms)
+  ✔ login de conta não verificada é bloqueado (RN-03) (6.1231ms)
+  ✔ credenciais incorretas retornam mensagem genérica (US-01, critério 2) (5.6627ms)
+  ✖ falha de comunicação com o provedor no login retorna 503 (T-06 / CT-06) (4.8629ms)
+  ✔ login válido redireciona o usuário (US-01, critério 1) (4.716ms)
+  ✔ recuperação de senha envia link para a página correta (RF-03) (3.3615ms)
+  ✔ nova senha fora da regra é rejeitada antes do Supabase (3.3246ms)
+✖ Fluxo de autenticação (142.3381ms)
+▶ Usuario — RF-01 / RN-01 (validarCadastro)
+  ✔ aceita cadastro com e-mail institucional e senha válida (3.9107ms)
+  ✔ rejeita e-mail fora do domínio institucional (RN-01) (1.2722ms)
+  ✔ rejeita senha curta ou sem número (0.696ms)
+  ✔ domínios aceitos podem ser configurados por variável de ambiente (0.3822ms)
+✔ Usuario — RF-01 / RN-01 (validarCadastro) (8.0756ms)
+▶ Usuario / TokenVerificacao — estados da conta (RF-02, RF-03, RN-03)
+  ✔ nova conta começa PENDENTE_VERIFICACAO e não pode autenticar (0.3745ms)
+  ✔ token válido muda a conta para ATIVO e libera o login (0.3702ms)
+  ✔ token expirado não ativa a conta (transição PENDENTE -> PENDENTE) (1.21ms)
+  ✔ token de recuperação de senha não serve para verificar e-mail (0.7107ms)
+✔ Usuario / TokenVerificacao — estados da conta (RF-02, RF-03, RN-03) (3.4246ms)
+▶ Usuario — permissões (RN-02)
+  ✔ somente ADMIN pode editar o banco de questões (0.2483ms)
+✔ Usuario — permissões (RN-02) (0.4688ms)
+▶ Questao — RF-07, RF-08, RF-09 e progresso (RF-04)
+  ✔ filtra combinando matéria e dificuldade (US-06, critério 1) (0.6513ms)
+  ✔ busca textual no enunciado ignora maiúsculas (0.1767ms)
+  ✔ filtro sem correspondência retorna lista vazia (US-06, critério 2) (0.1229ms)
+  ✔ corrigir gera RespostaQuestao correta ou incorreta (0.233ms)
+  ✔ corrigir rejeita alternativa de outra questão (0.159ms)
+  ✔ validar impede questão sem gabarito válido ou sem matéria (RF-08) (0.2613ms)
+  ✔ progresso calcula percentual de acerto a partir do histórico (0.2772ms)
+✔ Questao — RF-07, RF-08, RF-09 e progresso (RF-04) (2.2047ms)
+▶ ConversaIA — RF-10
+  ✔ mantém o contexto da questão e o histórico da conversa (0.4402ms)
+  ✔ limita o histórico enviado à IA e rejeita mensagem vazia (0.2985ms)
+✔ ConversaIA — RF-10 (0.8503ms)
+▶ Materiais — RF-11, RNF-04, RN-04
+  ✔ aceita PDF dentro do limite na pasta do próprio usuário (0.2499ms)
+  ✔ aceita exatamente 50 MB e rejeita acima disso (US-10, critério 2) (0.1847ms)
+  ✔ rejeita formato não permitido (0.1145ms)
+  ✔ nega upload na pasta de outro usuário (RN-04) (0.1005ms)
+  ✔ itens do repositório só são acessíveis pelo dono (0.199ms)
+  ✔ ItemDoRepositorio é abstrata (0.1261ms)
+✔ Materiais — RF-11, RNF-04, RN-04 (1.1714ms)
+▶ Regras de dependência entre camadas
+  ✔ controle positivo: o analisador enxerga as dependências reais (2.8157ms)
+  ✔ domínio (models/) não depende de nenhuma outra camada nem de biblioteca externa (2.5223ms)
+  ✔ serviços (servicos/) não conhecem HTTP nem as rotas (1.3129ms)
+  ✔ rotas não conhecem o Supabase nem o adaptador: só a interface ServicoAutenticacao (PP-01) (1.0569ms)
+  ✔ só app.js (raiz de composição) cria o cliente do Supabase e escolhe o adaptador (3.9718ms)
+  ✔ variáveis de ambiente só são lidas em config.js (exceção documentada: RN-01 em models/usuario.js) (1.8712ms)
+✔ Regras de dependência entre camadas (17.0476ms)
+▶ Fronteira entre cliente e servidor
+  ✔ o frontend nunca fala com o Supabase nem contém chaves: só conversa com a API (/api) (1.9689ms)
+✔ Fronteira entre cliente e servidor (2.1974ms)
+✔ GET /api/status responde com status ok (276.1247ms)
+ℹ tests 60
+ℹ suites 13
+ℹ pass 58
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 652.5574
+
+✖ failing tests:
+
+test at ..\tests\adaptador-autenticacao.test.js:93:3
+✖ falha de comunicação com o provedor no login retorna ERRO_SERVICO (T-06 / CT-06) (1.446ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'CREDENCIAIS_INVALIDAS'
+  - 'ERRO_SERVICO'
+  
+      at TestContext.<anonymous> (C:\Users\SAMSUNG\Desktop\ES\tp-eng-software\tests\adaptador-autenticacao.test.js:98:12)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'CREDENCIAIS_INVALIDAS',
+    expected: 'ERRO_SERVICO',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ..\tests\auth.test.js:91:3
+✖ falha de comunicação com o provedor no login retorna 503 (T-06 / CT-06) (4.8629ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  401 !== 503
+  
+      at TestContext.<anonymous> (C:\Users\SAMSUNG\Desktop\ES\tp-eng-software\tests\auth.test.js:94:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1208:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:831:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 401,
+    expected: 503,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

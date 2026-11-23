@@ -195,6 +195,8 @@ A priorização dos testes deriva diretamente da matriz de riscos documentada em
 ### CT-11 — Verificação de status e integridade da API (`GET /api/status`)
 - **Requisitos:** `DA-04`, `RNF-02`
 - **Pré-condições:** Aplicação em execução.
+- **Dados de teste:** sem corpo de requisição; serviço de autenticação simulado (`ServicoFalso`) injetado em `app.locals` para o cenário "configurado".
+- **Dados de teste:** sem corpo de requisição; serviço de autenticação simulado (`ServicoFalso`) injetado em `app.locals` para o cenário "configurado".
 - **Passos:**
   1. Executar requisição `GET /api/status`.
   2. Inspecionar status HTTP e propriedades do JSON.
@@ -207,6 +209,7 @@ A priorização dos testes deriva diretamente da matriz de riscos documentada em
 ### CT-12 — Verificação das regras de dependência entre camadas (ArchUnit)
 - **Requisitos:** `DA-01`, `DA-06`, Risco `R-06`
 - **Pré-condições:** Repositório íntegro.
+- **Dados de teste:** não se aplica (verificação estática); entrada são os arquivos de `src/models/`, `src/servicos/` e `src/rotas/`.
 - **Passos:**
   1. Executar analisador estático sobre `src/models/`, `src/servicos/` e `src/rotas/`.
   2. Checar que `models/` não importa `servicos/`, `rotas/` nem bibliotecas externas.
@@ -219,6 +222,8 @@ A priorização dos testes deriva diretamente da matriz de riscos documentada em
 
 ### CT-13 — Proteção de segredos e isolamento do frontend
 - **Requisitos:** `DA-04`, `DA-06`, `RN-05`, `RNF-02`
+- **Pré-condições:** Repositório íntegro.
+- **Dados de teste:** não se aplica (verificação estática); entrada são os scripts de `src/public/`; padrões proibidos: `supabase.co`, `createClient`, `supabaseKey`, tokens JWT (`eyJ...`).
 - **Passos:**
   1. Inspecionar os scripts de `src/public/` (`script.js`, `login/script.js`, `cadastro/script.js`, etc.).
   2. Assegurar ausência de termos como `createClient`, `supabaseKey`, chaves JWT ou credenciais embutidas.
@@ -230,6 +235,8 @@ A priorização dos testes deriva diretamente da matriz de riscos documentada em
 
 ### CT-14 — Tratamento centralizado de erros e resiliência (DA-05)
 - **Requisitos:** `DA-05`
+- **Pré-condições:** Aplicação em execução com serviço de autenticação simulado que lança exceção (`ServicoFalso({ lancarErro: true })`).
+- **Dados de teste:** `POST /api/login` com `email`: "ana@estudante.ufla.br", `senha`: "SenhaValida1"; `GET /api/rota-inexistente`.
 - **Passos:**
   1. Provocar uma exceção síncrona/assíncrona inesperada dentro de um controlador ou serviço.
   2. Enviar requisição para rota inexistente em `/api/rota-inexistente`.
@@ -241,6 +248,8 @@ A priorização dos testes deriva diretamente da matriz de riscos documentada em
 
 ### CT-15 — Regras de domínio de Questões, IA e Upload de Materiais
 - **Requisitos:** `RF-07`, `RF-08`, `RF-09`, `RF-10`, `RF-11`, `RN-02`, `RN-04`, `RNF-04`
+- **Pré-condições:** Modelos de domínio carregados (sem servidor nem banco).
+- **Dados de teste:** upload `application/pdf` de 1 KB na pasta do próprio usuário ("ana"); `image/png` com exatamente 50 MB e com 50 MB + 1 byte; `application/zip` de 10 bytes; `text/plain` enviado por "bruno" na pasta de "ana"; questões de exemplo definidas em `tests/models.test.js`.
 - **Passos:**
   1. Executar bateria de testes sobre `Questao.filtrar()`, `Questao.corrigir()`, `Questao.validar()`, `calcularProgresso()`.
   2. Executar validações de `ConversaIA` (manutenção de contexto e limite de histórico).
@@ -280,8 +289,7 @@ Execução realizada em **16/11/2026** no commit da branch `sprint-07` com o Nod
 | `CT-03` | `RF-01`, `US-02` | **Aprovado** | N/A | **Aprovado** | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
 | `CT-04` | `RF-02`, `RN-03` | **Aprovado** | N/A | **Aprovado** | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
 | `CT-05` | `RF-02`, `US-01` | **Aprovado** | N/A | **Aprovado** | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
-| `CT-06` | `RF-02`, `R-01` | **Reprovado** *(devolvia 401)* | [#22](https://github.com/pstehling/tp-eng-software/issues/22) (`T-06`) | **Aprovado** *(agora devolve 503)* | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
-| `CT-07` | `RF-02`, `US-01` | **Aprovado** | N/A | **Aprovado** | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
+| `CT-06` | `RF-02`, `R-01` | **Reprovado** *(devolvia 401)* | [#22](https://github.com/pstehling/tp-eng-software/issues/22) (`T-06`) | **Aprovado** *(agora devolve 503)* | Falha: [`sprint-07-testes-defeito-ct06.txt`](../evidencias/sprint-07-testes-defeito-ct06.txt) · Correção: [`sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) || `CT-07` | `RF-02`, `US-01` | **Aprovado** | N/A | **Aprovado** | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
 | `CT-08` | `RF-03`, `US-02` | **Aprovado** | N/A | **Aprovado** | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
 | `CT-09` | `RF-03` | **Aprovado** | N/A | **Aprovado** | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
 | `CT-10` | `RF-01`, `RF-03` | **Aprovado** | N/A | **Aprovado** | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
@@ -290,6 +298,8 @@ Execução realizada em **16/11/2026** no commit da branch `sprint-07` com o Nod
 | `CT-13` | `DA-04`, `RN-05` | **Aprovado** | N/A | **Aprovado** | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
 | `CT-14` | `DA-05` | **Aprovado** | N/A | **Aprovado** | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
 | `CT-15` | `RF-07` a `RF-11` | **Aprovado** | N/A | **Aprovado** | [`docs/evidencias/sprint-07-testes-depois.txt`](../evidencias/sprint-07-testes-depois.txt) |
+
+**Reprodução do defeito T-06:** os 2 testes do `CT-06` foram executados contra o código anterior à correção (commit `f505890^`) e reprovaram (`58 pass / 2 fail`; `401 !== 503`). Saída completa em [`docs/evidencias/sprint-07-testes-defeito-ct06.txt`](../evidencias/sprint-07-testes-defeito-ct06.txt). Após a correção no commit [`f505890`](https://github.com/pstehling/tp-eng-software/commit/f505890), a suíte fica em `60 pass / 0 fail`.
 
 ---
 

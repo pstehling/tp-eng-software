@@ -100,6 +100,7 @@
 | `docs/evidencias/sprint-07-testes-antes.txt` | [link](https://github.com/pstehling/tp-eng-software/blob/sprint-07/docs/evidencias/sprint-07-testes-antes.txt) | Saída legível da execução antes da correção do defeito T-06 (58 testes aprovados) |
 | `docs/evidencias/sprint-07-testes-depois.txt` | [link](https://github.com/pstehling/tp-eng-software/blob/sprint-07/docs/evidencias/sprint-07-testes-depois.txt) | Saída legível da execução após correção e novos testes do defeito T-06 (60 testes aprovados) |
 | `README.md` | [link](https://github.com/pstehling/tp-eng-software/blob/sprint-07/README.md) | Referência atualizada à suíte com 60 testes automatizados e link para o plano de testes |
+| `docs/evidencias/sprint-07-testes-defeito-ct06.txt` | [link](https://github.com/pstehling/tp-eng-software/blob/sprint-07/docs/evidencias/sprint-07-testes-defeito-ct06.txt) | Suíte atual executada contra o código anterior à correção: os 2 testes do CT-06 reprovam (`401 !== 503`), comprovando o defeito T-06 |
 
 ---
 

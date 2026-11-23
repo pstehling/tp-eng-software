@@ -41,8 +41,7 @@
 
 | Issue | Severidade | Caso que revelou | Situação | Correção | Reteste |
 |---|:---:|:---:|:---:|---|:---:|
-| [#22](https://github.com/pstehling/tp-eng-software/issues/22) (`T-06`) | **Média** | `CT-06` | **Corrigido** | `AdaptadorSupabaseAuth` passou a identificar `credenciaisInvalidas()` de forma explícita e devolver `ERRO_SERVICO` para quedas de rede/provedor; rota `/api/login` passou a responder `503`. | **Aprovado** (coberto por 2 novos testes) |
-
+| [#22](https://github.com/pstehling/tp-eng-software/issues/22) (`T-06`) | **Média** | `CT-06` | **Corrigido** | `AdaptadorSupabaseAuth` passou a identificar `credenciaisInvalidas()` de forma explícita e devolver `ERRO_SERVICO` para quedas de rede/provedor; rota `/api/login` passou a responder `503`. | **Aprovado** (coberto por 2 novos testes). Falha antes da correção: [`sprint-07-testes-defeito-ct06.txt`](../evidencias/sprint-07-testes-defeito-ct06.txt); commit [`f505890`](https://github.com/pstehling/tp-eng-software/commit/f505890). |
 ---
 
 ## 4. Requisitos × resultado verificado
