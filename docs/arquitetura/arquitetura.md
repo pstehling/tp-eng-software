@@ -246,8 +246,8 @@ Registradas no formato de ADR (*Architecture Decision Record*): contexto, altern
 - **Decisão:** (c). [`config.js`](../../src/config.js) é o único lugar que lê o ambiente; [`app.js`](../../src/app.js) é o único que cria serviços externos (raiz de composição). Os testes substituem serviços por `app.locals`, sem tocar no ambiente.
 - **Requisitos/atributos de qualidade:** RN-05 (a futura chave de IA seguirá o mesmo caminho e nunca chegará ao navegador), segurança, portabilidade entre ambientes.
 - **Consequências e trade-offs:** cada ambiente precisa de um `.env` próprio, e um `.env` errado só é percebido em execução. Por isso `/api/status` passou a informar se a autenticação está configurada, sem expor as chaves.
-  - **Desvio conhecido:** `src/.env`, com chaves reais, continua versionado no git apesar do `.gitignore` (risco R-02).
-  - **Exceção documentada:** `models/usuario.js` lê `DOMINIOS_INSTITUCIONAIS` (RN-01) direto do ambiente.
+  - **Desvio corrigido na Sprint 8:** `src/.env` foi retirado do versionamento (`T-11`, Issue #27); as chaves antigas seguem no histórico do git e devem ser regeneradas no Supabase.
+- **Exceção documentada:** `models/usuario.js` lê `DOMINIOS_INSTITUCIONAIS` (RN-01) direto do ambiente.
 - **Evidência no repositório:** [`src/config.js`](../../src/config.js), [`src/.env.example`](../../src/.env.example), [`src/rotas/status.js`](../../src/rotas/status.js); teste "variáveis de ambiente só são lidas em config.js".
 
 ### DA-05 — A falha de uma requisição não derruba o servidor

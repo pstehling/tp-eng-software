@@ -73,3 +73,44 @@ Os logs completos de execução estão versionados em:
 2. **Proteção de Rotas com JWT (`T-08`):** Middleware de validação de token de sessão para rotas privadas.
 3. **Auditoria de Acessibilidade (`RNF-01`):** Execução automatizada de relatórios Lighthouse sobre as páginas `src/public/`.
 4. **Testes de Desempenho e Carga (`RNF-03`):** Medição formal de tempos de resposta da API sob concorrência.
+
+7. Consolidação final (Sprint 8)
+
+Execução final em 23/11/2026, na branch main (tag sprint-08). Saída completa em docs/evidencias/sprint-08-testes-final.txt.
+
+7.1 Resultados quantificados
+Item	Planejado	Executado	Aprovado	Reprovado	Não executado
+Casos de teste formais (CT-01 a CT-15)	15	15	15	0	0
+Testes automatizados (13 suítes)	60	60	60	0	0
+Verificações não funcionais previstas para a Sprint 8	2	0	0	0	2
+
+As 2 verificações não executadas são a auditoria de acessibilidade do RNF-01 (Lighthouse) e o teste de carga do RNF-03. Nenhuma das duas tem ferramenta configurada no projeto, por isso não houve execução e elas não entram como aprovadas.
+
+7.2 Situação final dos requisitos
+Requisito	Situação final	Casos / evidência	Justificativa
+RF-01	Atendido	CT-01, CT-02, CT-03, CT-10	Cadastro com e-mail institucional, bloqueio de duplicidade e validação de senha aprovados.
+RF-02	Parcial	CT-04 a CT-07	Login, bloqueio de conta pendente e falha do provedor (503) aprovados; o logout não foi implementado.
+RF-03	Atendido	CT-02, CT-08, CT-09, CT-10	Confirmação de conta, pedido de redefinição e validação de token aprovados.
+RF-04, RF-07 a RF-11	Parcial	CT-15	Regras de domínio implementadas e testadas; não há telas nem persistência (T-09 pendente).
+RF-05, RF-06	Não atendido	—	Só modelados no diagrama de classes; sem código de tela, rota ou teste específico.
+RNF-01	Não verificado	—	Auditoria de acessibilidade não executada.
+RNF-02	Parcial	CT-10, CT-11, CT-13	Senhas no Supabase Auth, segredos fora do frontend e .env fora do versionamento (T-11); rotas privadas ainda sem JWT (T-08).
+RNF-03	Parcial	CT-11	Suíte completa roda em cerca de 1 s; sem teste de carga.
+RNF-04	Parcial	CT-15	Tipo e limite de 50 MB validados no domínio; upload real não implementado.
+
+Resumo dos 15 requisitos (11 RF + 4 RNF): 2 atendidos (RF-01, RF-03), 10 parciais (RF-02, RF-04, RF-07 a RF-11, RNF-02 a RNF-04), 2 não atendidos (RF-05, RF-06) e 1 não verificado (RNF-01).
+
+7.3 Defeitos, correções e retestes
+Issue	Defeito	Correção	Reteste	Evidência
+#22 (T-06)	Falha de rede no login era respondida como credencial inválida (401)	Commit f505890: adaptador devolve ERRO_SERVICO e a rota responde 503	CT-06 aprovado	falha · correção · final
+#27 (T-11)	src/.env com chaves reais versionado desde o commit aeaabd1	Sprint 8: git rm --cached src/.env (o .gitignore já cobria o arquivo)	git ls-files src/.env sem saída; suíte segue 60/60	commits da Sprint 8 · final
+
+Observação sobre o T-11: as chaves antigas continuam no histórico do git. A correção só fica completa quando novas chaves forem geradas no painel do Supabase.
+
+7.4 Limitações da versão final
+Logout não implementado (RF-02).
+Telas e persistência de questões, progresso, perfil, IA e materiais não implementadas (RF-04 a RF-11, T-09).
+Rotas privadas sem verificação de JWT (T-08).
+Aplicação não publicada, só executável localmente (T-10).
+Auditoria de acessibilidade e teste de carga não executados (RNF-01, RNF-03).
+Chaves do Supabase ainda não regeneradas após a remoção do .env (T-11).
